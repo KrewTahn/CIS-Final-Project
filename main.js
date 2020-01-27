@@ -181,8 +181,8 @@ function startLoseScreen() {
 	text2.style.height = 1000;
 	text2.style.backgroundColor = "red";
 	text2.innerHTML = "YOU LOSE";
-	text2.style.top = 200 + 'px'; // 200 + 'px'
-	text2.style.left = 200 + 'px'; //200 + 'px'
+	text2.style.top = 100 + 'px'; // 200 + 'px'
+	text2.style.left = 324 + 'px'; //200 + 'px'
 	document.body.appendChild(text2);
 }
 
