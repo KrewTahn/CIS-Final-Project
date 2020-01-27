@@ -51,14 +51,12 @@ MonkeyDude.load(
 	// resource URL
 	'BorderCube.obj',
 	// called when resource is loaded
-	function ( object ) {
-
-
-
-    object.traverse( function ( child ) {
-    	if ( child instanceof THREE.Mesh ) {
-          child.material.color.setHex(0xeeff00);
-	},
+	 function ( object ) {
+  //   object.traverse( function ( child ) {
+  //   	if ( child instanceof THREE.Mesh ) {
+  //         child.material.color.setHex(0xeeff00);
+		obj1 = object;
+	 },
 	// called when loading is in progresses
 	function ( xhr ) {
 
@@ -125,15 +123,13 @@ function afterLoading() {
 // 		var materialboi = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
 // 		var cube = new THREE.Mesh( geometry, materialboi );
 // 		scene.add( cube );
-  
+
     let geometry = new THREE.SphereGeometry( 0.5, 32, 32 );
 		let material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
 		ball = new THREE.Mesh( geometry, material );
 		scene.add( ball );
-  
-  
 
-	    animate();
+	  animate();
 }
 
 
