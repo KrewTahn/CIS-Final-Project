@@ -1,20 +1,21 @@
-var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+let scene = new THREE.Scene();
+let camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
-var renderer = new THREE.WebGLRenderer();
+let renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
-var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-// var cube = new THREE.Mesh( geometry, material );
+let geometry = new THREE.BoxGeometry( 1, 1, 1 );
+let material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+// let cube = new THREE.Mesh( geometry, material );
 
-var light = new THREE.AmbientLight( 0x404040 ); // soft white light
+let light = new THREE.AmbientLight( 0x404040 ); // soft white light
 scene.add( light );
 
-var goingDown = true;
+let goingDown = true;
+let ball = null;
 
-var spotLight = new THREE.DirectionalLight( 0xffffff , 0.5);
+let spotLight = new THREE.DirectionalLight( 0xffffff , 0.5);
 spotLight.position.set( 100, 1000, 100 );
 
 spotLight.castShadow = true;
@@ -28,11 +29,11 @@ spotLight.shadow.camera.fov = 30;
 
 scene.add( spotLight );
 
-var isClicked = 0;
+let isClicked = 0;
 
-var obj1;
-var mousesX;
-var mousesY;
+let obj1;
+let mousesX;
+let mousesY;
 
 camera.position.z = 20;
 camera.position.y = 5;
@@ -43,7 +44,7 @@ document.addEventListener( 'mousedown', onDocumentMouseDown, false );
 document.addEventListener( 'mouseup', onDocumentMouseUp, false);
 
 // instantiate a loader
-var MonkeyDude = new THREE.OBJLoader();
+let MonkeyDude = new THREE.OBJLoader();
 
 // load a resource
 MonkeyDude.load(
@@ -53,13 +54,10 @@ MonkeyDude.load(
 	function ( object ) {
 
 
+
     object.traverse( function ( child ) {
     	if ( child instanceof THREE.Mesh ) {
           child.material.color.setHex(0xeeff00);
-         }
-    } );	
-    obj1 = object;
-
 	},
 	// called when loading is in progresses
 	function ( xhr ) {
@@ -99,8 +97,8 @@ function onDocumentMouseUp( event ) {
 }
 
 function whileMouseDown() {
-	var mouseX = window.innerWidth / 2 - mousesX;
-    var mouseY = window.innerHeight / 2 - mousesY;
+	let mouseX = window.innerWidth / 2 - mousesX;
+    let mouseY = window.innerHeight / 2 - mousesY;
     obj1.rotation.y = -Math.PI*2*mouseX/window.innerWidth;
     // obj1.rotation.x = Math.PI*2*mouseY/window.innerHeight;
     obj1.updateMatrix();
@@ -121,19 +119,38 @@ function afterLoading() {
 		scene.add(boundary);
 
 
-		// Adding Cube With texture
+// 		// Adding Cube With texture
 
-		var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-		var materialboi = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-		var cube = new THREE.Mesh( geometry, materialboi );
-		scene.add( cube );
+// 		var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+// 		var materialboi = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+// 		var cube = new THREE.Mesh( geometry, materialboi );
+// 		scene.add( cube );
+  
+    let geometry = new THREE.SphereGeometry( 0.5, 32, 32 );
+		let material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+		ball = new THREE.Mesh( geometry, material );
+		scene.add( ball );
+  
+  
 
 	    animate();
 }
 
 
+function ballPhysics(ball) {
+
+
+	// if ball.position.y < 0 {
+	//
+	// } else {
+	// 	ball.position.y -= 0.01;
+	// }
+
+};
+
 function animate() {
 	requestAnimationFrame( animate );
+  ballPhysics(ball);
 	renderer.render( scene, camera );
 }
 
