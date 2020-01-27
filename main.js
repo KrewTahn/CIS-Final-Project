@@ -133,6 +133,10 @@ function afterLoading() {
 }
 
 
+let ballX = 0;
+let ballY = 0.05;
+let ballZ = 0;
+
 function ballPhysics(ball) {
 
 
