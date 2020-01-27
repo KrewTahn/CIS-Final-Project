@@ -1,4 +1,5 @@
 let scene = new THREE.Scene();
+scene.background = new THREE.Color( 0x535353 );
 let camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 10000 );
 
 let renderer = new THREE.WebGLRenderer();
@@ -15,9 +16,10 @@ scene.add( light );
 let goingDown = true;
 let ball = null;
 let cube = null;
+let boundary = null;
 
 let spotLight = new THREE.DirectionalLight( 0xffffff , 0.5);
-spotLight.position.set( 100, 1000, 100 );
+spotLight.position.set( 400, 300, 800 );
 
 spotLight.castShadow = true;
 
@@ -56,7 +58,7 @@ MonkeyDude.load(
 	 function ( object ) {
     object.traverse( function ( child ) {
     	if ( child instanceof THREE.Mesh ) {
-          child.material.color.setHex(0xeeff00);
+          child.material.color.setHex(808080);
       }})
 		obj1 = object;
 	 },
@@ -106,12 +108,12 @@ function whileMouseDown() {
 }
 
 function afterLoading() {
-	// this becomes new main
-	let floor = new THREE.BoxGeometry( 20, 1, 20 );
-	let floormat = new THREE.MeshBasicMaterial( { color: 0xff0094 }  );
+		// this becomes new main
+		let floor = new THREE.BoxGeometry( 20, 1, 20 );
+		let floormat = new THREE.MeshBasicMaterial( { color: 0xff0094 }  );
 
-	let boundary = obj1.clone();
-		boundary.scale.x = 1;
+		boundary = obj1.clone();
+		boundary.scale.x = 0.4;
 		boundary.scale.y = 1;
 		boundary.scale.z = 1;
 		boundary.position.y = 5
@@ -124,10 +126,8 @@ function afterLoading() {
 		// scene.add( testCube );
 
 
-// 		// Adding Cube With texture
-
-
-		cube = addCube("stone");
+// 	// Adding Cube With texture
+		//cube = addCube("stone");
 		let geometry = new THREE.BoxGeometry( 2, 0.3, 2 );
 		let materialboi = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
 		cube = new THREE.Mesh( geometry, materialboi );
@@ -143,8 +143,7 @@ function afterLoading() {
 	  animate();
 }
 
-
-
+//Controls the block that the ball bounces off.
 document.addEventListener('keydown',onDocumentKeyDown,false);
 function onDocumentKeyDown(event){
 		let delta = 1;
@@ -177,7 +176,7 @@ function onDocumentKeyUp(event){
 	//document.removeEventListener('keydown',onDocumentKeyDown,false);
 }
 
-
+//This function gets called when the ball flies out of the screen.
 function startLoseScreen() {
 	let text2 = document.createElement('div');
 	text2.style.position = 'absolute';
@@ -198,9 +197,11 @@ let ballZ = 0;
 
 function ballPhysics(ball) {
 
-	ball.position.x += ballX
-	ball.position.y += ballY
-	ball.position.z += ballZ
+	if (ball.position.y > -5) {
+		ball.position.x += ballX
+		ball.position.y += ballY
+		ball.position.z += ballZ
+	}
 	//console.log(ball.position.y);
 
 	let ballPos = new THREE.Vector3(ball.position.x, ball.position.y, ball.position.z);
@@ -217,13 +218,14 @@ function ballPhysics(ball) {
 	}
 	if (dist < 0.5) {
 		ballY = Math.abs(ballY * -1);
+		//boundary.rotateX(90);
 	}
 
 };
 
 function animate() {
 	requestAnimationFrame( animate );
-  	ballPhysics(ball);
+  ballPhysics(ball);
 	renderer.render( scene, camera );
 }
 
@@ -255,7 +257,6 @@ function addCube(ballType = "dirt") {
 			map: matLoader.load('grass/dirt.jpg'),
 			} );
 		}
-
 
 
 		let cube = new THREE.Mesh( geometry, materialboi );
