@@ -1,8 +1,8 @@
 let scene = new THREE.Scene();
-let camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+let camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 10000 );
 
 let renderer = new THREE.WebGLRenderer();
-renderer.setSize( window.innerWidth, window.innerHeight );
+renderer.setSize( window.innerWidth * 0.9, window.innerHeight * .9);
 document.body.appendChild( renderer.domElement );
 
 let geometry = new THREE.BoxGeometry( 1, 1, 1 );
@@ -125,12 +125,10 @@ function afterLoading() {
 
 // 		// Adding Cube With texture
 
-		let geometry = new THREE.BoxGeometry( 1, 1, 1 );
-		let materialboi = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-		cube = new THREE.Mesh( geometry, materialboi );
+		cube = addCube("stone");
 		scene.add( cube );
 
-    geometry = new THREE.SphereGeometry( 0.2, 32, 32 );
+    	geometry = new THREE.SphereGeometry( 0.2, 32, 32 );
 		let material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
 		ball = new THREE.Mesh( geometry, material );
 		scene.add( ball );
@@ -193,7 +191,7 @@ function ballPhysics(ball) {
 
 function animate() {
 	requestAnimationFrame( animate );
-  ballPhysics(ball);
+  	ballPhysics(ball);
 	renderer.render( scene, camera );
 }
 
