@@ -147,7 +147,6 @@ function onDocumentKeyDown(event){
 				cube.position.x = cube.position.x - delta;
 				break;
 				case 38 : // up arrow
-				//camera.position.y = camera.position.y - delta;
 				//cube.position.x = cube.position.x - delta;
 				break;
 				case 39 : // right arrow
@@ -193,5 +192,44 @@ function animate() {
 	renderer.render( scene, camera );
 }
 
+<<<<<<< Updated upstream
+=======
+function addCube(ballType = "dirt") {
+		// Adding Cube With texture
+		let geometry = new THREE.BoxGeometry( 1, 1, 1 );
+		// load a texture, set wrap mode to repeat
+		let matLoader = new THREE.TextureLoader();
+		let materialboi;
+
+		if( ballType == "dirt") {
+			materialboi = new THREE.MeshBasicMaterial( {
+			map: matLoader.load('grass/dirt.jpg'),
+			} );
+		} else if ( ballType == "cobble") {
+			materialboi = new THREE.MeshBasicMaterial( {
+			map: matLoader.load('grass/cobblestone.png'),
+			} );
+		} else if ( ballType == "stone") {
+			materialboi = new THREE.MeshBasicMaterial( {
+			map: matLoader.load('grass/stone.jpg'),
+			} );
+		}  else if ( ballType == "lamp") {
+			materialboi = new THREE.MeshBasicMaterial( {
+			map: matLoader.load('grass/lamp.jpg'),
+			} );
+		} else {
+			materialboi = new THREE.MeshBasicMaterial( {
+			map: matLoader.load('grass/dirt.jpg'),
+			} );
+		}
+
+
+
+		let cube = new THREE.Mesh( geometry, materialboi );
+		return cube;
+}
+
+
+>>>>>>> Stashed changes
 
 setTimeout(afterLoading, 1000);
