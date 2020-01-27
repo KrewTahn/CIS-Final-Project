@@ -14,6 +14,7 @@ scene.add( light );
 
 let goingDown = true;
 let ball = null;
+let cube = null;
 
 let spotLight = new THREE.DirectionalLight( 0xffffff , 0.5);
 spotLight.position.set( 100, 1000, 100 );
@@ -35,9 +36,9 @@ let obj1;
 let mousesX;
 let mousesY;
 
-camera.position.z = 20;
+camera.position.z = 17;
 camera.position.y = 5;
-
+camera.rotation.z = 0.00;
 
 document.addEventListener( 'mousemove', onMouseMove, false );
 document.addEventListener( 'mousedown', onDocumentMouseDown, false );
@@ -105,8 +106,8 @@ function whileMouseDown() {
 
 function afterLoading() {
 	// this becomes new main
-	var floor = new THREE.BoxGeometry( 20, 1, 20 );
-	var floormat = new THREE.MeshBasicMaterial( { color: 0xff0094 }  );
+	let floor = new THREE.BoxGeometry( 20, 1, 20 );
+	let floormat = new THREE.MeshBasicMaterial( { color: 0xff0094 }  );
 
 	let boundary = obj1.clone();
 		boundary.scale.x = 1;
@@ -120,12 +121,12 @@ function afterLoading() {
 
 // 		// Adding Cube With texture
 
-// 		var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-// 		var materialboi = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-// 		var cube = new THREE.Mesh( geometry, materialboi );
-// 		scene.add( cube );
+		let geometry = new THREE.BoxGeometry( 1, 1, 1 );
+		let materialboi = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+		cube = new THREE.Mesh( geometry, materialboi );
+		scene.add( cube );
 
-    let geometry = new THREE.SphereGeometry( 0.5, 32, 32 );
+    geometry = new THREE.SphereGeometry( 0.2, 32, 32 );
 		let material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
 		ball = new THREE.Mesh( geometry, material );
 		scene.add( ball );
@@ -134,18 +135,55 @@ function afterLoading() {
 }
 
 
-let ballX = 0;
-let ballY = 0.05;
+
+document.addEventListener('keydown',onDocumentKeyDown,false);
+function onDocumentKeyDown(event){
+		let delta = 1;
+		event = event || window.event;
+		let keycode = event.keyCode;
+		switch(keycode){
+				case 37 : //left arrow
+				//camera.position.x = camera.position.x - delta;
+				cube.position.x = cube.position.x - delta;
+				break;
+				case 38 : // up arrow
+				//camera.position.y = camera.position.y - delta;
+				//cube.position.x = cube.position.x - delta;
+				break;
+				case 39 : // right arrow
+				//camera.position.x = camera.position.x + delta;
+				cube.position.x = cube.position.x + delta;
+				break;
+				case 40 : //down arrow
+				//camera.position.y = camera.position.y + delta;
+				break;
+		}
+		document.addEventListener('keyup',onDocumentKeyUp,false);
+}
+function onDocumentKeyUp(event){
+	//document.removeEventListener('keydown',onDocumentKeyDown,false);
+}
+
+
+let ballX = 0.1;
+let ballY = -0.1;
 let ballZ = 0;
 
 function ballPhysics(ball) {
 
+	ball.position.x += ballX
+	ball.position.y += ballY
+	ball.position.z += ballZ
+	//console.log(ball.position.y);
 
-	// if ball.position.y < 0 {
-	//
-	// } else {
-	// 	ball.position.y -= 0.01;
-	// }
+	if (ball.position.y < 0 || ball.position.y > 10) {
+		ballY = ballY * -1;
+	}
+	if (ball.position.x < -5 || ball.position.x > 5) {
+		ballX = ballX * -1;
+		//console.log("Hit!!");
+	}
+
 
 };
 
