@@ -125,7 +125,7 @@ function afterLoading() {
 
 // 		// Adding Cube With texture
 
-		let geometry = new THREE.BoxGeometry( 1, 1, 1 );
+		let geometry = new THREE.BoxGeometry( 2, 0.3, 2 );
 		let materialboi = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
 		cube = new THREE.Mesh( geometry, materialboi );
 		scene.add( cube );
@@ -133,6 +133,7 @@ function afterLoading() {
     geometry = new THREE.SphereGeometry( 0.2, 32, 32 );
 		let material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
 		ball = new THREE.Mesh( geometry, material );
+		ball.position.y += 4;
 		scene.add( ball );
 
 	  animate();
@@ -169,8 +170,21 @@ function onDocumentKeyUp(event){
 }
 
 
+function startLoseScreen() {
+	let text2 = document.createElement('div');
+	text2.style.position = 'absolute';
+	//text2.style.zIndex = 1;    // if you still don't see the label, try uncommenting this
+	text2.style.width = 1000;
+	text2.style.height = 1000;
+	text2.style.backgroundColor = "red";
+	text2.innerHTML = "YOU LOSE";
+	text2.style.top = 200 + 'px'; // 200 + 'px'
+	text2.style.left = 200 + 'px'; //200 + 'px'
+	document.body.appendChild(text2);
+}
+
 let ballX = 0.1;
-let ballY = -0.1;
+let ballY = 0.1;
 let ballZ = 0;
 
 function ballPhysics(ball) {
@@ -180,12 +194,20 @@ function ballPhysics(ball) {
 	ball.position.z += ballZ
 	//console.log(ball.position.y);
 
-	if (ball.position.y < 0 || ball.position.y > 10) {
+	let ballPos = new THREE.Vector3(ball.position.x, ball.position.y, ball.position.z);
+	let cubePos = new THREE.Vector3(cube.position.x, cube.position.y, cube.position.z);
+	let dist = ballPos.distanceTo(cubePos);
+
+	if (ball.position.y > 10) {
 		ballY = ballY * -1;
+	} else if (ball.position.y < -2) {
+		startLoseScreen();
 	}
 	if (ball.position.x < -5 || ball.position.x > 5) {
 		ballX = ballX * -1;
-		//console.log("Hit!!");
+	}
+	if (dist < 1) {
+		ballY = Math.abs(ballY * -1);
 	}
 
 
@@ -205,23 +227,23 @@ function addCube(ballType = "dirt") {
 		let materialboi;
 
 		if( ballType == "dirt") {
-			materialboi = new THREE.MeshBasicMaterial( { 
+			materialboi = new THREE.MeshBasicMaterial( {
 			map: matLoader.load('grass/dirt.jpg'),
 			} );
 		} else if ( ballType == "cobble") {
-			materialboi = new THREE.MeshBasicMaterial( { 
+			materialboi = new THREE.MeshBasicMaterial( {
 			map: matLoader.load('grass/cobblestone.png'),
 			} );
 		} else if ( ballType == "stone") {
-			materialboi = new THREE.MeshBasicMaterial( { 
+			materialboi = new THREE.MeshBasicMaterial( {
 			map: matLoader.load('grass/stone.jpg'),
 			} );
 		}  else if ( ballType == "lamp") {
-			materialboi = new THREE.MeshBasicMaterial( { 
+			materialboi = new THREE.MeshBasicMaterial( {
 			map: matLoader.load('grass/lamp.jpg'),
 			} );
 		} else {
-			materialboi = new THREE.MeshBasicMaterial( { 
+			materialboi = new THREE.MeshBasicMaterial( {
 			map: matLoader.load('grass/dirt.jpg'),
 			} );
 		}
