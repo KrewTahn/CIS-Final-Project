@@ -35,6 +35,14 @@ let obj1;
 let mousesX;
 let mousesY;
 
+camera.position.z = 20;
+camera.position.y = 5;
+
+
+document.addEventListener( 'mousemove', onMouseMove, false );
+document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+document.addEventListener( 'mouseup', onDocumentMouseUp, false);
+
 // instantiate a loader
 let MonkeyDude = new THREE.OBJLoader();
 
@@ -45,36 +53,11 @@ MonkeyDude.load(
 	// called when resource is loaded
 	function ( object ) {
 
-		// this becomes new main
 
-		// let floor = new THREE.BoxGeometry( 20, 1, 20 );
-		// let floormat = new THREE.MeshBasicMaterial( { color: 0xff0094 }  );
-		// let floorst = new THREE.Mesh( floor, floormat );
-		// floorst.position.y = 0;
-		// scene.add(floorst);
 
     object.traverse( function ( child ) {
     	if ( child instanceof THREE.Mesh ) {
           child.material.color.setHex(0xeeff00);
-          }
-    } );
-
-		//Boundary object
-		let boundary = object.clone();
-		boundary.scale.x = 1;
-		boundary.scale.y = 1;
-		boundary.scale.z = 1;
-		boundary.position.y = 5
-		boundary.rotation.z = 1.55;
-		boundary.rotation.x = 1.6;
-		scene.add(boundary);
-
-		let geometry = new THREE.SphereGeometry( 0.5, 32, 32 );
-		let material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
-		ball = new THREE.Mesh( geometry, material );
-		scene.add( ball );
-
-    animate();
 	},
 	// called when loading is in progresses
 	function ( xhr ) {
@@ -84,20 +67,14 @@ MonkeyDude.load(
             if (xhr.loaded / xhr.total * 100 == 100) {
                 document.body.classList.remove("loading");
                 console.log("DONE");
-
             }
 	},
 	// called when loading has errors
 	function ( error ) {
-
 		console.log( 'An error happened' );
 
 	}
 );
-
-document.addEventListener( 'mousemove', onMouseMove, false );
-document.addEventListener( 'mousedown', onDocumentMouseDown, false );
-document.addEventListener( 'mouseup', onDocumentMouseUp, false);
 
 function onDocumentMouseDown( event ) {
     if (isClicked === 0) {
@@ -127,10 +104,38 @@ function whileMouseDown() {
     obj1.updateMatrix();
 }
 
+function afterLoading() {
+	// this becomes new main
+	var floor = new THREE.BoxGeometry( 20, 1, 20 );
+	var floormat = new THREE.MeshBasicMaterial( { color: 0xff0094 }  );
 
-camera.position.z = 20;
-camera.position.y = 5;
-//camera.rotation.x = 0;
+	let boundary = obj1.clone();
+		boundary.scale.x = 1;
+		boundary.scale.y = 1;
+		boundary.scale.z = 1;
+		boundary.position.y = 5
+		boundary.rotation.z = 1.55;
+		boundary.rotation.x = 1.6;
+		scene.add(boundary);
+
+
+// 		// Adding Cube With texture
+
+// 		var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+// 		var materialboi = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+// 		var cube = new THREE.Mesh( geometry, materialboi );
+// 		scene.add( cube );
+  
+    let geometry = new THREE.SphereGeometry( 0.5, 32, 32 );
+		let material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+		ball = new THREE.Mesh( geometry, material );
+		scene.add( ball );
+  
+  
+
+	    animate();
+}
+
 
 function ballPhysics(ball) {
 
@@ -148,3 +153,6 @@ function animate() {
   ballPhysics(ball);
 	renderer.render( scene, camera );
 }
+
+
+setTimeout(afterLoading, 1000);
