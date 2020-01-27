@@ -52,9 +52,10 @@ MonkeyDude.load(
 	'BorderCube.obj',
 	// called when resource is loaded
 	 function ( object ) {
-  //   object.traverse( function ( child ) {
-  //   	if ( child instanceof THREE.Mesh ) {
-  //         child.material.color.setHex(0xeeff00);
+    object.traverse( function ( child ) {
+    	if ( child instanceof THREE.Mesh ) {
+          child.material.color.setHex(0xeeff00);
+      }})
 		obj1 = object;
 	 },
 	// called when loading is in progresses
