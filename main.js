@@ -118,6 +118,10 @@ function afterLoading() {
 		boundary.rotation.x = 1.6;
 		scene.add(boundary);
 
+		// How to add cubes at origin
+		// let testCube = addCube("fdf");
+		// scene.add( testCube );
+
 
 // 		// Adding Cube With texture
 
@@ -192,6 +196,42 @@ function animate() {
   ballPhysics(ball);
 	renderer.render( scene, camera );
 }
+
+function addCube(ballType = "dirt") {
+		// Adding Cube With texture
+		let geometry = new THREE.BoxGeometry( 1, 1, 1 );
+		// load a texture, set wrap mode to repeat
+		let matLoader = new THREE.TextureLoader();
+		let materialboi;
+
+		if( ballType == "dirt") {
+			materialboi = new THREE.MeshBasicMaterial( { 
+			map: matLoader.load('grass/dirt.jpg'),
+			} );
+		} else if ( ballType == "cobble") {
+			materialboi = new THREE.MeshBasicMaterial( { 
+			map: matLoader.load('grass/cobblestone.png'),
+			} );
+		} else if ( ballType == "stone") {
+			materialboi = new THREE.MeshBasicMaterial( { 
+			map: matLoader.load('grass/stone.jpg'),
+			} );
+		}  else if ( ballType == "lamp") {
+			materialboi = new THREE.MeshBasicMaterial( { 
+			map: matLoader.load('grass/lamp.jpg'),
+			} );
+		} else {
+			materialboi = new THREE.MeshBasicMaterial( { 
+			map: matLoader.load('grass/dirt.jpg'),
+			} );
+		}
+
+
+
+		let cube = new THREE.Mesh( geometry, materialboi );
+		return cube;
+}
+
 
 
 setTimeout(afterLoading, 1000);
