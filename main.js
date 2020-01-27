@@ -40,9 +40,10 @@ camera.position.z = 17;
 camera.position.y = 5;
 camera.rotation.z = 0.00;
 
-document.addEventListener( 'mousemove', onMouseMove, false );
-document.addEventListener( 'mousedown', onDocumentMouseDown, false );
-document.addEventListener( 'mouseup', onDocumentMouseUp, false);
+// // Uncomment this section in order to re-enable the mouse
+// document.addEventListener( 'mousemove', onMouseMove, false );
+// document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+// document.addEventListener( 'mouseup', onDocumentMouseUp, false);
 
 // instantiate a loader
 let MonkeyDude = new THREE.OBJLoader();
@@ -133,7 +134,7 @@ function afterLoading() {
 		cube.position.y -= 0.7;
 		scene.add( cube );
 
-    	geometry = new THREE.SphereGeometry( 0.2, 32, 32 );
+    geometry = new THREE.SphereGeometry( 0.2, 32, 32 );
 		let material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
 		ball = new THREE.Mesh( geometry, material );
 		ball.position.y += 4;
@@ -152,18 +153,22 @@ function onDocumentKeyDown(event){
 		switch(keycode){
 				case 37 : //left arrow
 				//camera.position.x = camera.position.x - delta;
-				cube.position.x = cube.position.x - delta;
+				if (cube.position.x > -5) {
+					cube.position.x = cube.position.x - delta;
+				}
 				break;
 				case 38 : // up arrow
-				//camera.position.y = camera.position.y - delta;
+				camera.position.z = camera.position.z - delta;
 				//cube.position.x = cube.position.x - delta;
 				break;
 				case 39 : // right arrow
 				//camera.position.x = camera.position.x + delta;
-				cube.position.x = cube.position.x + delta;
+				if (cube.position.x < 5) {
+					cube.position.x = cube.position.x + delta;
+				}
 				break;
 				case 40 : //down arrow
-				//camera.position.y = camera.position.y + delta;
+				camera.position.z = camera.position.z + delta;
 				break;
 		}
 		document.addEventListener('keyup',onDocumentKeyUp,false);
@@ -176,13 +181,14 @@ function onDocumentKeyUp(event){
 function startLoseScreen() {
 	let text2 = document.createElement('div');
 	text2.style.position = 'absolute';
+	//console.log();
 	//text2.style.zIndex = 1;    // if you still don't see the label, try uncommenting this
-	text2.style.width = 1000;
-	text2.style.height = 1000;
+	text2.style.width = 100;
+	text2.style.height = 100;
 	text2.style.backgroundColor = "red";
 	text2.innerHTML = "YOU LOSE";
 	text2.style.top = 100 + 'px'; // 200 + 'px'
-	text2.style.left = 324 + 'px'; //200 + 'px'
+	text2.style.left = window.innerWidth/2.6 + 'px'; //200 + 'px'
 	document.body.appendChild(text2);
 }
 
@@ -212,7 +218,6 @@ function ballPhysics(ball) {
 	if (dist < 0.5) {
 		ballY = Math.abs(ballY * -1);
 	}
-
 
 };
 
