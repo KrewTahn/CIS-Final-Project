@@ -130,6 +130,7 @@ function afterLoading() {
 		let geometry = new THREE.BoxGeometry( 2, 0.3, 2 );
 		let materialboi = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
 		cube = new THREE.Mesh( geometry, materialboi );
+		cube.position.y -= 0.7;
 		scene.add( cube );
 
     	geometry = new THREE.SphereGeometry( 0.2, 32, 32 );
@@ -208,7 +209,7 @@ function ballPhysics(ball) {
 	if (ball.position.x < -5 || ball.position.x > 5) {
 		ballX = ballX * -1;
 	}
-	if (dist < 1) {
+	if (dist < 0.5) {
 		ballY = Math.abs(ballY * -1);
 	}
 
