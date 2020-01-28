@@ -33,6 +33,9 @@ let increaseRow = 1;
 let brickTemplate = null;
 let lives = 5;
 
+let redFlash = null;
+let flashTimeout = null;
+
 let livesText = document.createElement('div');
 
 
@@ -203,8 +206,13 @@ function afterLoading() {
 		indicator2.position.z += 6.5;
 		boundary.add( indicator2 );
 
-	  animate();
+		geometry = new THREE.BoxGeometry( 30, 30, 10 );
+		material = new THREE.MeshBasicMaterial( { color: 0xFF2838 } );
+		redFlash = new THREE.Mesh( geometry, material );
+		redFlash.position.x = 0;
+		//scene.add( redFlash );
 
+	  animate();
 
 
 		livesText.style.position = 'absolute';
@@ -212,8 +220,8 @@ function afterLoading() {
 		//text2.style.zIndex = 1;    // if you still don't see the label, try uncommenting this
 		livesText.style.width = 100;
 		livesText.style.height = 100;
-		livesText.style.backgroundColor = "blue";
-		livesText.innerHTML = "Lives: " + lives;
+		livesText.style.backgroundColor = "white";
+		livesText.innerHTML = "Lives (" + lives + ") ---- Level (" + level + ")";
 		livesText.style.top = 100 + 'px'; // 200 + 'px'
 		livesText.style.left = window.innerWidth/8 + 'px'; //200 + 'px'
 		document.body.appendChild(livesText);
@@ -378,9 +386,11 @@ function ballPhysics(ball) {
 	if (ball.position.y > 10 - ballSize) {
 		ballY = -speed;
 	} else if (ball.position.y < -2) {
-		if (lives > 1) {
+		if (lives > 1) { //Should just be 1
 		lives -= 1;
-		livesText.innerHTML = "Lives: " + lives;
+		livesText.innerHTML = "Lives (" + lives + ") ---- Level (" + level + ")";
+		scene.add(redFlash);
+		flashTimeout = setInterval(takeDamage, 100);
 		ballY = ballY * -1;
 		}	else {
 			startLoseScreen();
@@ -593,7 +603,8 @@ function checkForEnd() {
 	if (brickCount < 1) {
 		level ++;
 		lives = 5;
-		if (speed < 0.5) {
+		livesText.innerHTML = "Lives (" + lives + ") ---- Level (" + level + ")";
+		if (speed < 0.2) {
 			speed += 0.01
 		}
 		if (level % 2 == 0) {
@@ -605,6 +616,17 @@ function checkForEnd() {
 	}
 }
 
+
+function takeDamage() {
+	if (flashTimeout != null) {
+		clearTimeout(flashTimeout);
+		flashTimeout = null;
+		//console.log("Took damage!!");
+		takeDamage();
+	} else {
+		scene.remove(redFlash);
+	}
+}
 
 function animate() {
 	requestAnimationFrame( animate );
