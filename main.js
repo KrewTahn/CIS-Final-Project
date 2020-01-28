@@ -25,10 +25,11 @@ let repeater = null;
 
 let debounce = true;
 
-let level = 7;
+let level = 4;
 let brickCount = 0;
 let increaseRow = 1;
 let brickTemplate = null;
+let lives = 3;
 
 
 let spotLight = new THREE.DirectionalLight( 0xffffff , 0.5);
@@ -183,6 +184,19 @@ function afterLoading() {
 		scene.add( ball );
 
 	  animate();
+
+
+		let text2 = document.createElement('div');
+		text2.style.position = 'absolute';
+		//console.log();
+		//text2.style.zIndex = 1;    // if you still don't see the label, try uncommenting this
+		text2.style.width = 100;
+		text2.style.height = 100;
+		text2.style.backgroundColor = "blue";
+		text2.innerHTML = "Lives: " + lives;
+		text2.style.top = 100 + 'px'; // 200 + 'px'
+		text2.style.left = window.innerWidth/8 + 'px'; //200 + 'px'
+		document.body.appendChild(text2);
 }
 
 function flipScreen(){
@@ -404,7 +418,7 @@ function collisions() {
 
 
         					// we need to check if recent collisions so that if the ball
-        					// is stuck in the cube and has registered a hit it does 
+        					// is stuck in the cube and has registered a hit it does
         					// not register as multiple hits
         					let hitCounter = hitbuffer;
         					if( hitCounter == 0) {
@@ -434,9 +448,9 @@ function collisions() {
         						// this breaks it out of loop
         						hitbuffer++;
         						// console.log("hit! Stopping...");
-        					} 
+        					}
 
-        					
+
         					// if ( Math.abs(collideX + radius - ballyboiX) > Math.abs(collideY + radius - ballyboiY)) {
         					// 	console.log("Top");
         					// 	ballY = ballY * (-1);
