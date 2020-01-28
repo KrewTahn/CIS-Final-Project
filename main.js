@@ -148,7 +148,7 @@ function afterLoading() {
 			let tempMat = newCubeMat(textNum);
 			temp.mat = textNum;
 			temp.material = tempMat;
-			temp.position.x += h + 0.01;
+			temp.position.x += h + 0;
 			temp.type = "collide";
 			temp.hit = false;
 			scene.add(temp);
@@ -379,17 +379,35 @@ function collisions() {
         							scene.remove(node);
         							node.hit = true;
         						}
-        					// testing which side it hit on to see how to move ball
-        					if ( Math.abs(collideX + radius - ballyboiX) > Math.abs(collideY + radius - ballyboiY)) {
-        						console.log("Top");
+        					// we need x and y relative to origin of object
+        					let xTrig = collideX - ballyboiX
+        					let yTrig = collideY - ballyboiY;
+
+        					let angleRad = Math.atan(yTrig / xTrig);
+        					let angleDeg = angleRad * 180 / Math.PI;
+        					console.log(angleDeg);
+
+
+        					if( angleDeg >= 45 && angleDeg <= 135) {
+        						console.log("TOP");
         						ballY = ballY * (-1);
-        					} else if (Math.abs(collideX - radius - ballyboiX) > Math.abs(collideY - radius - ballyboiY)) {
+        					} else if ( angleDeg <= 45 || angleDeg >= 315) {
+        						console.log("RIGHT");
+        						ballX = ballX * (-1);
+        					} else if ( angleDeg >= 135 && angleDeg <= 225) {
+        						console.log("LEFT");
+        						ballX = ballX * (-1);
+        					} else if ( angleDeg >= 225 && angleDeg <= 315) {
         						console.log("Bottom");
         						ballY = ballY * (-1);
-        					} else {
-        						console.log("sides");
-        						ballX = ballX * (-1);
         					}
+        					// if ( Math.abs(collideX + radius - ballyboiX) > Math.abs(collideY + radius - ballyboiY)) {
+        					// 	console.log("Top");
+        					// 	ballY = ballY * (-1);
+        					// } else {
+        					// 	console.log("sides");
+        					// 	ballX = ballX * (-1);
+        					// }
         				}
 
         		}
