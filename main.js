@@ -130,10 +130,25 @@ function afterLoading() {
 		scene.add(boundary);
 
 		//How to add cubes at origin
-		let brick = addCube("fdf");
+		let brick = addCube("dirt");
 		brick.addEventListener
-		brick.position.y += 7;
+		brick.position.y += 8;
+		brick.position.x -= 4;
 		brick.type = "collide";
+		brick.hit = false;
+
+
+		for( let h = 0; h <= 7; h++) {
+			let temp = brick.clone();
+			let textNum = Math.floor(Math.random() * 4);
+			console.log(textNum);
+			let tempMat = newCubeMat(textNum);
+			temp.material = tempMat;
+			temp.position.x += h;
+			temp.type = "collide";
+			temp.hit = false;
+			scene.add(temp);
+		}
 		scene.add( brick );
 
 
@@ -302,10 +317,22 @@ function collisions() {
 
         	let radius = 0.5;
 
+        	// tests for collisions here
         	if( (collideX -  radius) < ballyboiX && (collideX + radius) > ballyboiX) {
         		if( (collideY - radius) < ballyboiY && (collideY + radius) > ballyboiY) {
-        			console.log("collision");
-        			scene.remove(node);
+        				if( !node.hit){
+        					scene.remove(node);
+        					node.hit = true;
+        					// testing which side it hit on to see how to move ball
+        					if ( Math.abs(collideX + radius - ballyboiX) > Math.abs(collideY + radius - ballyboiY)) {
+        						console.log("Top or bottom");
+        						ballY = ballY * (-1);
+        					} else {
+        						console.log("sides");
+        						ballX = ballX * (-1);
+        					}
+        				}
+
         		}
         	}
         }
@@ -347,6 +374,35 @@ function addCube(ballType = "dirt") {
 
 		let cube = new THREE.Mesh( geometry, materialboi );
 		return cube;
+}
+
+function newCubeMat(ballType = "dirt") {
+		let matLoader = new THREE.TextureLoader();
+		let materialboi;
+
+		if( ballType == 0) {
+			materialboi = new THREE.MeshBasicMaterial( {
+			map: matLoader.load('grass/dirt.jpg'),
+			} );
+		} else if ( ballType == 1) {
+			materialboi = new THREE.MeshBasicMaterial( {
+			map: matLoader.load('grass/cobblestone.png'),
+			} );
+		} else if ( ballType == 2) {
+			materialboi = new THREE.MeshBasicMaterial( {
+			map: matLoader.load('grass/stone.jpg'),
+			} );
+		}  else if ( ballType == 3) {
+			materialboi = new THREE.MeshBasicMaterial( {
+			map: matLoader.load('grass/lamp.jpg'),
+			} );
+		} else {
+			materialboi = new THREE.MeshBasicMaterial( {
+			map: matLoader.load('grass/dirt.jpg'),
+			} );
+		}
+
+		return materialboi;
 }
 
 
