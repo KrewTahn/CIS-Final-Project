@@ -361,6 +361,8 @@ function collisions() {
 
         	let radius = 0.5;
 
+        	
+
         	// tests for collisions here
         	if( (collideX -  radius) < ballyboiX && (collideX + radius) > ballyboiX) {
         		if( (collideY - radius) < ballyboiY && (collideY + radius) > ballyboiY) {
@@ -379,13 +381,15 @@ function collisions() {
         							scene.remove(node);
         							node.hit = true;
         						}
-        					// we need x and y relative to origin of object
-        					let xTrig = collideX - ballyboiX
-        					let yTrig = collideY - ballyboiY;
+        					
 
-        					let angleRad = Math.atan(yTrig / xTrig);
-        					let angleDeg = angleRad * 180 / Math.PI;
-        					console.log(angleDeg);
+        					// we need x and y relative to origin of object
+        					let xTrig = (collideX - ballyboiX) * (-1);
+        					let yTrig = (collideY - ballyboiY) * (-1);
+
+        					let angleRad = Math.atan2(xTrig , yTrig);
+        					let angleDeg = Math.abs(angleRad * 180 / Math.PI);
+        					console.log(xTrig + "  and " + yTrig  + "  DEG "  + angleDeg);
 
 
         					if( angleDeg >= 45 && angleDeg <= 135) {
