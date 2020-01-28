@@ -127,9 +127,12 @@ function afterLoading() {
 		boundary.rotation.x = 1.6;
 		scene.add(boundary);
 
-		// How to add cubes at origin
-		// let testCube = addCube("fdf");
-		// scene.add( testCube );
+		//How to add cubes at origin
+		let brick = addCube("fdf");
+		brick.addEventListener
+		brick.position.y += 7;
+		brick.type = "collide";
+		scene.add( brick );
 
 
 // 	// Adding Cube With texture
@@ -257,8 +260,38 @@ function ballPhysics(ball) {
 
 function animate() {
 	requestAnimationFrame( animate );
-  ballPhysics(ball);
+  	ballPhysics(ball);
+  	collisions();
 	renderer.render( scene, camera );
+}
+
+
+function collisions() {
+	scene.traverse( function( node ) {
+
+    if ( node instanceof THREE.Mesh ) {
+
+        if( node.type == "collide"){
+        	// console.log(node.position.x + " and " + ball.position.x);
+        	let collideX = node.position.x;
+        	let ballyboiX = ball.position.x;
+
+        	let collideY = node.position.y;
+        	let ballyboiY = ball.position.y;
+
+        	let radius = 0.5;
+
+        	if( (collideX -  radius) < ballyboiX && (collideX + radius) > ballyboiX) {
+        		if( (collideY - radius) < ballyboiY && (collideY + radius) > ballyboiY) {
+        			console.log("collision");
+        			scene.remove(node);
+        		}
+        	}
+        }
+
+    }
+
+} );
 }
 
 function addCube(ballType = "dirt") {
