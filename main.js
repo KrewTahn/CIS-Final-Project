@@ -493,10 +493,6 @@ function addCube(ballType = "dirt") {
 			materialboi = new THREE.MeshBasicMaterial( {
 			map: matLoader.load('grass/lamp.png'),
 			} );
-		} else {
-			materialboi = new THREE.MeshBasicMaterial( {
-			map: matLoader.load('grass/dirt.png'),
-			} );
 		}
 
 
@@ -523,10 +519,6 @@ function newCubeMat(ballType = "dirt") {
 		}  else if ( ballType == 3) {
 			materialboi = new THREE.MeshBasicMaterial( {
 			map: matLoader.load('grass/lamp.png'),
-			} );
-		} else {
-			materialboi = new THREE.MeshBasicMaterial( {
-			map: matLoader.load('grass/dirt.png'),
 			} );
 		}
 
