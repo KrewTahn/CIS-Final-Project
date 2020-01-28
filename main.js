@@ -27,6 +27,7 @@ let debounce = true;
 
 let level = 1;
 let brickCount = 0;
+let increaseRow = 1;
 let brickTemplate = null;
 
 
@@ -146,20 +147,23 @@ function afterLoading() {
 		brickTemplate = brick.clone();
 
 
-		for( let h = 0; h <= level; h++) {
-			let temp = brick.clone();
-			let textNum = Math.floor(Math.random() * 4);
-			console.log(textNum);
-			let tempMat = newCubeMat(textNum);
-			temp.mat = textNum;
-			temp.material = tempMat;
-			temp.position.x += h + 0;
-			temp.type = "collide";
-			temp.hit = false;
-			brickCount += 1;
-			scene.add(temp);
+		for( let h = 0; h < 9; h++) {
+			for( let j = 0; j < increaseRow; j++) {
+				let temp = brick.clone();
+				let textNum = 0;
+				//console.log(textNum);
+				let tempMat = newCubeMat(textNum);
+				temp.mat = textNum;
+				temp.material = tempMat;
+				temp.position.x += h + 0;
+				temp.position.y += j + 0;
+				temp.type = "collide";
+				temp.hit = false;
+				brickCount += 1;
+				scene.add(temp);
+			}
 		}
-		scene.add( brick );
+		//scene.add( brick );
 
 
 // 	// Adding Cube With texture
@@ -177,7 +181,7 @@ function afterLoading() {
 		ball.matrixAutoUpdate = true;
 		scene.add( ball );
 
-	  //animate();
+	  animate();
 }
 
 function flipScreen(){
@@ -332,7 +336,8 @@ function ballPhysics(ball) {
 	if (ball.position.y > 10 - ballSize) {
 		ballY = ballY * -1;
 	} else if (ball.position.y < -2) {
-		startLoseScreen();
+		//startLoseScreen();
+		ballY = ballY * -1;
 	}
 	if (ball.position.x < -5 + ballSize || ball.position.x > 5 - ballSize) {
 		ballX = ballX * -1;
@@ -360,7 +365,7 @@ function collisions() {
 
         	let radius = 0.5;
 
-        	
+
 
         	// tests for collisions here
         	if( (collideX -  radius) < ballyboiX && (collideX + radius) > ballyboiX) {
@@ -370,17 +375,25 @@ function collisions() {
         					if( flipped && mirrored && node.mat == 3) {
         							scene.remove(node);
         							node.hit = true;
+											brickCount -= 1;
+											console.log("bc" + brickCount);
         						} else if( flipped && !mirrored && node.mat == 2) {
         							scene.remove(node);
         							node.hit = true;
+											brickCount -= 1;
+											console.log("bc" + brickCount);
         						} else if( !flipped && mirrored && node.mat == 1) {
         							scene.remove(node);
         							node.hit = true;
+											brickCount -= 1;
+											console.log("bc" + brickCount);
         						} else if( !flipped && !mirrored && node.mat == 0) {
         							scene.remove(node);
         							node.hit = true;
+											brickCount -= 1;
+											console.log("bc" + brickCount);
         						}
-        					
+
 
         					// we need x and y relative to origin of object
         					let xTrig = (collideX - ballyboiX) * (-1);
@@ -488,8 +501,35 @@ function newCubeMat(ballType = "dirt") {
 
 
 
-function checkForEnd() {
+function createNewSet() {
+	for( let h = 0; h < 9; h++) {
+		for( let j = 0; j < increaseRow; j++) {
+			let temp = brickTemplate.clone();
+			let textNum = Math.floor(Math.random() * level);
+			if (textNum > 4) {
+				textNum = Math.floor(Math.random() * 4)
+			}
+			let tempMat = newCubeMat(textNum);
+			temp.mat = textNum;
+			temp.material = tempMat;
+			temp.position.x += h + 0;
+			temp.position.y += j + 0;
+			temp.type = "collide";
+			temp.hit = false;
+			brickCount += 1;
+			scene.add(temp);
+		}
+	}
+}
 
+function checkForEnd() {
+	if (brickCount < 1) {
+		level ++;
+		if (level % 5 == 0) {
+			increaseRow++;
+		}
+		createNewSet();
+	}
 }
 
 
