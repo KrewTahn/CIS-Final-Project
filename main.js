@@ -368,7 +368,7 @@ function collisions() {
 
         	if( hitbuffer != 0) {
         		hitbuffer++;
-        		if(hitbuffer % 100 == 0) {
+        		if(hitbuffer % 90 == 0) {
         			hitbuffer = 0;
         			// console.log("ready for next hit...");
         		}
