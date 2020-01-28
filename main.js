@@ -46,7 +46,7 @@ let obj1;
 let mousesX;
 let mousesY;
 
-camera.position.z = 17;
+camera.position.z = 15;
 camera.position.y = 5;
 camera.rotation.z = 0.00;
 
@@ -229,7 +229,7 @@ function mirrorScreen(){
 			if (camera.position.z >= 5) {
 				camera.rotation.y -= 0.01;
 				if (camera.rotation.y <= 0) {
-					mirrored = false;
+					mirrored = false;S
 					ballMoving = true;
 					console.log("Ending!" + camera.position.z);
 					if (repeater != null) {
@@ -366,7 +366,6 @@ function collisions() {
         	if( (collideX -  radius) < ballyboiX && (collideX + radius) > ballyboiX) {
         		if( (collideY - radius) < ballyboiY && (collideY + radius) > ballyboiY) {
         				if( !node.hit){
-        					
         					node.hit = true;
         					// testing which side it hit on to see how to move ball
         					if ( Math.abs(collideX + radius - ballyboiX) > Math.abs(collideY + radius - ballyboiY)) {
