@@ -25,6 +25,10 @@ let repeater = null;
 
 let debounce = true;
 
+let level = 1;
+let brickCount = 0;
+let brickTemplate = null;
+
 
 let spotLight = new THREE.DirectionalLight( 0xffffff , 0.5);
 spotLight.position.set( 400, 300, 800 );
@@ -139,9 +143,10 @@ function afterLoading() {
 		brick.type = "collide";
 		brick.hit = false;
 		brick.mat = Math.floor(Math.random() * 4);
+		brickTemplate = brick.clone();
 
 
-		for( let h = 0; h <= 7; h++) {
+		for( let h = 0; h <= level; h++) {
 			let temp = brick.clone();
 			let textNum = Math.floor(Math.random() * 4);
 			console.log(textNum);
@@ -151,6 +156,7 @@ function afterLoading() {
 			temp.position.x += h;
 			temp.type = "collide";
 			temp.hit = false;
+			brickCount += 1;
 			scene.add(temp);
 		}
 		scene.add( brick );
@@ -171,7 +177,7 @@ function afterLoading() {
 		ball.matrixAutoUpdate = true;
 		scene.add( ball );
 
-	  animate();
+	  //animate();
 }
 
 function flipScreen(){
@@ -339,12 +345,7 @@ function ballPhysics(ball) {
 
 };
 
-function animate() {
-	requestAnimationFrame( animate );
-  	ballPhysics(ball);
-  	collisions();
-	renderer.render( scene, camera );
-}
+
 
 
 function collisions() {
@@ -467,6 +468,21 @@ function newCubeMat(ballType = "dirt") {
 		return materialboi;
 }
 
+
+
+function checkForEnd() {
+
+}
+
+
+
+function animate() {
+	requestAnimationFrame( animate );
+  	ballPhysics(ball);
+  	collisions();
+		checkForEnd();
+	renderer.render( scene, camera );
+}
 
 
 setTimeout(afterLoading, 1000);
