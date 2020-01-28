@@ -19,10 +19,12 @@ let cube = null;
 let boundary = null;
 let ballSize = 0.2; //This should be here
 let flipped = false;
+let mirrored = false;
 let ballMoving = true;
 let repeater = null;
 
 let debounce = true;
+
 
 let spotLight = new THREE.DirectionalLight( 0xffffff , 0.5);
 spotLight.position.set( 400, 300, 800 );
@@ -186,6 +188,47 @@ function flipScreen(){
 	}
 }
 
+function mirrorScreen(){
+		debounce = false;
+		if (mirrored == false) {
+			camera.position.z -= 0.03;
+			//camera.rotation.y -= 0.01;
+			if (camera.position.z <= -5) {
+				camera.rotation.y += 0.01;
+				if (camera.rotation.y >= Math.PI) {
+					mirrored = true;
+					ballMoving = true;
+					console.log("Starting!" + camera.position.z);
+					if (repeater != null) {
+						clearTimeout(repeater);
+						repeater = null;
+					}
+					debounce = true;
+				}
+			}
+		} else {
+			camera.position.z += 0.03;
+			//camera.rotation.y -= 0.01;
+			if (camera.position.z >= 5) {
+				camera.rotation.y -= 0.01;
+				if (camera.rotation.y <= 0) {
+					mirrored = false;
+					ballMoving = true;
+					console.log("Ending!" + camera.position.z);
+					if (repeater != null) {
+						clearTimeout(repeater);
+						repeater = null;
+					}
+					debounce = true;
+				}
+			}
+		}
+	if (repeater!=null) {
+		repeater = setTimeout(mirrorScreen, 1);
+	}
+}
+
+
 //Controls the block that the ball bounces off.
 document.addEventListener('keydown',onDocumentKeyDown,false);
 function onDocumentKeyDown(event){
@@ -218,7 +261,7 @@ function onDocumentKeyDown(event){
 				//camera.rotation.z += 0.1;
 				if (debounce == true) {
 					ballMoving = false;
-					repeater = setTimeout(flipScreen, 1);
+					repeater = setTimeout(mirrorScreen, 1);
 				}
 				break;
 		}
@@ -256,7 +299,7 @@ function ballPhysics(ball) {
 	if (ballMoving == true) {
 		ball.position.x += ballX
 		ball.position.y += ballY
-		ball.position.z += ballZ
+		//ball.position.z += ballZ
 	}
 
 	let ballPos = new THREE.Vector3(ball.position.x, ball.position.y, ball.position.z);
