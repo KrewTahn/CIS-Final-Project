@@ -16,6 +16,8 @@ scene.add( light );
 let goingDown = true;
 let ball = null;
 let cube = null;
+let indicator = null;
+let indicator2 = null;
 let boundary = null;
 let ballSize = 0.2; //This should be here
 let flipped = false;
@@ -25,7 +27,7 @@ let repeater = null;
 
 let debounce = true;
 
-let level = 4;
+let level = 1;
 let brickCount = 0;
 let increaseRow = 1;
 let brickTemplate = null;
@@ -132,10 +134,6 @@ function afterLoading() {
 		let floor = new THREE.BoxGeometry( 20, 1, 20 );
 		let floormat = new THREE.MeshBasicMaterial( { color: 0xff0094 }  );
 
-
-
-
-
 		// adding boundary
 		boundary = obj1.clone();
 		boundary.scale.x = 0.4;
@@ -184,12 +182,26 @@ function afterLoading() {
 		cube.position.y -= 0.7;
 		scene.add( cube );
 
-    	geometry = new THREE.SphereGeometry( ballSize, 32, 32 );
+    geometry = new THREE.SphereGeometry( ballSize, 32, 32 );
 		let material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
 		ball = new THREE.Mesh( geometry, material );
 		ball.position.y += 4;
 		ball.matrixAutoUpdate = true;
 		scene.add( ball );
+
+		geometry = new THREE.BoxGeometry( 0.3, 12, 0.3 );
+		material = new THREE.MeshBasicMaterial( { color: 0x8FBC8F } );
+		indicator = new THREE.Mesh( geometry, material );
+		indicator.position.x += 8;
+		indicator.position.z += 6.5;
+		boundary.add( indicator );
+
+		geometry = new THREE.BoxGeometry( 0.3, 12, 0.3 );
+		material = new THREE.MeshBasicMaterial( { color: 0x87CEFA } );
+		indicator2 = new THREE.Mesh( geometry, material );
+		indicator2.position.x -= 8;
+		indicator2.position.z += 6.5;
+		boundary.add( indicator2 );
 
 	  animate();
 
@@ -211,6 +223,8 @@ function flipScreen(){
 		debounce = false;
 		if (flipped == false) {
 			camera.rotation.z += 0.01;
+			indicator.position.z -= 0.041;
+			indicator2.position.z -= 0.041;
 			if (camera.rotation.z >= Math.PI) {
 				flipped = true;
 				ballMoving = true;
@@ -222,6 +236,8 @@ function flipScreen(){
 			}
 		} else {
 			camera.rotation.z += 0.01;
+			indicator.position.z += 0.041;
+			indicator2.position.z += 0.041;
 			if (camera.rotation.z >= Math.PI*2) {
 				flipped = false;
 				ballMoving = true;
@@ -230,6 +246,8 @@ function flipScreen(){
 					repeater = null;
 				}
 				camera.rotation.z = savedCameraRotation;
+				indicator.position.z = 6.5;
+				indicator2.position.z = 6.5;
 				debounce = true;
 			}
 		}
@@ -567,13 +585,12 @@ function createNewSet() {
 function checkForEnd() {
 	if (brickCount < 1) {
 		level ++;
-		if (level % 5 == 0) {
+		if (level % 2 == 0) {
 			increaseRow++;
 		}
 		createNewSet();
 	}
 }
-
 
 
 function animate() {
