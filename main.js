@@ -138,6 +138,7 @@ function afterLoading() {
 		brick.position.x -= 4;
 		brick.type = "collide";
 		brick.hit = false;
+		brick.mat = Math.floor(Math.random() * 4);
 
 
 		for( let h = 0; h <= 7; h++) {
@@ -145,6 +146,7 @@ function afterLoading() {
 			let textNum = Math.floor(Math.random() * 4);
 			console.log(textNum);
 			let tempMat = newCubeMat(textNum);
+			brick.mat = textNum;
 			temp.material = tempMat;
 			temp.position.x += h;
 			temp.type = "collide";
