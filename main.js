@@ -229,7 +229,7 @@ function mirrorScreen(){
 			if (camera.position.z >= 5) {
 				camera.rotation.y -= 0.01;
 				if (camera.rotation.y <= 0) {
-					mirrored = false;S
+					mirrored = false;
 					ballMoving = true;
 					console.log("Ending!" + camera.position.z);
 					if (repeater != null) {
@@ -413,7 +413,7 @@ function addCube(ballType = "dirt") {
 
 		if( ballType == "dirt") {
 			materialboi = new THREE.MeshBasicMaterial( {
-			map: matLoader.load('grass/dirt.jpg'),
+			map: matLoader.load('grass/dirt.png'),
 			} );
 		} else if ( ballType == "cobble") {
 			materialboi = new THREE.MeshBasicMaterial( {
@@ -421,15 +421,15 @@ function addCube(ballType = "dirt") {
 			} );
 		} else if ( ballType == "stone") {
 			materialboi = new THREE.MeshBasicMaterial( {
-			map: matLoader.load('grass/stone.jpg'),
+			map: matLoader.load('grass/stone.png'),
 			} );
 		}  else if ( ballType == "lamp") {
 			materialboi = new THREE.MeshBasicMaterial( {
-			map: matLoader.load('grass/lamp.jpg'),
+			map: matLoader.load('grass/lamp.png'),
 			} );
 		} else {
 			materialboi = new THREE.MeshBasicMaterial( {
-			map: matLoader.load('grass/dirt.jpg'),
+			map: matLoader.load('grass/dirt.png'),
 			} );
 		}
 
@@ -444,7 +444,7 @@ function newCubeMat(ballType = "dirt") {
 
 		if( ballType == 0) {
 			materialboi = new THREE.MeshBasicMaterial( {
-			map: matLoader.load('grass/dirt.jpg'),
+			map: matLoader.load('grass/dirt.png'),
 			} );
 		} else if ( ballType == 1) {
 			materialboi = new THREE.MeshBasicMaterial( {
@@ -452,15 +452,15 @@ function newCubeMat(ballType = "dirt") {
 			} );
 		} else if ( ballType == 2) {
 			materialboi = new THREE.MeshBasicMaterial( {
-			map: matLoader.load('grass/stone.jpg'),
+			map: matLoader.load('grass/stone.png'),
 			} );
 		}  else if ( ballType == 3) {
 			materialboi = new THREE.MeshBasicMaterial( {
-			map: matLoader.load('grass/lamp.jpg'),
+			map: matLoader.load('grass/lamp.png'),
 			} );
 		} else {
 			materialboi = new THREE.MeshBasicMaterial( {
-			map: matLoader.load('grass/dirt.jpg'),
+			map: matLoader.load('grass/dirt.png'),
 			} );
 		}
 
