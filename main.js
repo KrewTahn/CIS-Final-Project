@@ -352,6 +352,7 @@ function ballPhysics(ball) {
 		ballY = ballY * -1;
 	} else if (ball.position.y < -2) {
 		//startLoseScreen();
+		lives -= 1;
 		ballY = ballY * -1;
 	}
 	if (ball.position.x < -5 + ballSize || ball.position.x > 5 - ballSize) {
