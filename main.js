@@ -22,6 +22,8 @@ let flipped = false;
 let ballMoving = true;
 let repeater = null;
 
+let debounce = true;
+
 let spotLight = new THREE.DirectionalLight( 0xffffff , 0.5);
 spotLight.position.set( 400, 300, 800 );
 
@@ -151,6 +153,7 @@ function afterLoading() {
 }
 
 function flipScreen(){
+		debounce = false;
 		if (flipped == false) {
 			camera.rotation.z += 0.01;
 			if (camera.rotation.z >= Math.PI) {
@@ -160,6 +163,7 @@ function flipScreen(){
 					clearTimeout(repeater);
 					repeater = null;
 				}
+				debounce = true;
 			}
 		} else {
 			camera.rotation.z += 0.01;
@@ -171,10 +175,11 @@ function flipScreen(){
 					repeater = null;
 				}
 				camera.rotation.z = savedCameraRotation;
+				debounce = true;
 			}
 		}
 	if (repeater!=null) {
-		repeater = setTimeout(flipScreen, 10);
+		repeater = setTimeout(flipScreen, 1);
 	}
 }
 
@@ -193,10 +198,11 @@ function onDocumentKeyDown(event){
 				break;
 				case 38 : // up arrow
 				//
-				console.log(camera.rotation.z);
-				ballMoving = false;
-				repeater = setTimeout(flipScreen, 10);
-
+				//console.log(camera.rotation.z);
+				if (debounce == true) {
+					ballMoving = false;
+					repeater = setTimeout(flipScreen, 1);
+				}
 
 				break;
 				case 39 : // right arrow
@@ -207,6 +213,10 @@ function onDocumentKeyDown(event){
 				break;
 				case 40 : //down arrow
 				//camera.rotation.z += 0.1;
+				if (debounce == true) {
+					ballMoving = false;
+					repeater = setTimeout(flipScreen, 1);
+				}
 				break;
 		}
 		document.addEventListener('keyup',onDocumentKeyUp,false);
