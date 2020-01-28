@@ -215,7 +215,7 @@ function mirrorScreen(){
 				if (camera.rotation.y >= Math.PI) {
 					mirrored = true;
 					ballMoving = true;
-					console.log("Starting!" + camera.position.z);
+					console.log("color!" + cube.colors);
 					if (repeater != null) {
 						clearTimeout(repeater);
 						repeater = null;
@@ -231,7 +231,7 @@ function mirrorScreen(){
 				if (camera.rotation.y <= 0) {
 					mirrored = false;
 					ballMoving = true;
-					console.log("Ending!" + camera.position.z);
+					console.log("color!" + cube.colors);
 					if (repeater != null) {
 						clearTimeout(repeater);
 						repeater = null;
