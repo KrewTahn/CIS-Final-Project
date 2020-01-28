@@ -130,6 +130,11 @@ function afterLoading() {
 		let floor = new THREE.BoxGeometry( 20, 1, 20 );
 		let floormat = new THREE.MeshBasicMaterial( { color: 0xff0094 }  );
 
+
+
+
+
+		// adding boundary
 		boundary = obj1.clone();
 		boundary.scale.x = 0.4;
 		boundary.scale.y = 1;
@@ -500,7 +505,7 @@ function addCube(ballType = "dirt") {
 		return cube;
 }
 
-function newCubeMat(ballType = "dirt") {
+function newCubeMat(ballType) {
 		let matLoader = new THREE.TextureLoader();
 		let materialboi;
 
@@ -520,6 +525,11 @@ function newCubeMat(ballType = "dirt") {
 			materialboi = new THREE.MeshBasicMaterial( {
 			map: matLoader.load('grass/lamp.png'),
 			} );
+		} else {
+			console.log("MAKING BAD MATERIAL");
+			materialboi = new THREE.MeshBasicMaterial( {
+			map: matLoader.load('grass/f.png'),
+			} );
 		}
 
 		return materialboi;
@@ -532,9 +542,10 @@ function createNewSet() {
 		for( let j = 0; j < increaseRow; j++) {
 			let temp = brickTemplate.clone();
 			let textNum = Math.floor(Math.random() * level);
-			if (textNum > 4) {
+			if (textNum >= 4) {
 				textNum = Math.floor(Math.random() * 4)
 			}
+			console.log(textNum);
 			let tempMat = newCubeMat(textNum);
 			temp.mat = textNum;
 			temp.material = tempMat;
