@@ -17,6 +17,10 @@ let goingDown = true;
 let ball = null;
 let cube = null;
 let boundary = null;
+let ballSize = 0.2; //This should be here
+let flipped = false;
+let ballMoving = true;
+let repeater = null;
 
 let spotLight = new THREE.DirectionalLight( 0xffffff , 0.5);
 spotLight.position.set( 400, 300, 800 );
