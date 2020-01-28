@@ -147,7 +147,7 @@ function afterLoading() {
 		//How to add cubes at origin
 		let brick = addCube("dirt");
 		brick.addEventListener
-		brick.position.y += 7;
+		brick.position.y += 6.5;
 		brick.position.x -= 3.5;
 		brick.type = "collide";
 		brick.hit = false;
