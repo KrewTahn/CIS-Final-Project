@@ -1,8 +1,9 @@
 let scene = new THREE.Scene();
+scene.background = new THREE.Color( 0x535353 );
 let camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 10000 );
 
 let renderer = new THREE.WebGLRenderer();
-renderer.setSize( window.innerWidth * 0.9, window.innerHeight * .9);
+renderer.setSize( window.innerWidth * 0.9, window.innerHeight * .8);
 document.body.appendChild( renderer.domElement );
 
 let geometry = new THREE.BoxGeometry( 1, 1, 1 );
@@ -15,9 +16,18 @@ scene.add( light );
 let goingDown = true;
 let ball = null;
 let cube = null;
+let boundary = null;
+let ballSize = 0.2; //This should be here
+let flipped = false;
+let mirrored = false;
+let ballMoving = true;
+let repeater = null;
+
+let debounce = true;
+
 
 let spotLight = new THREE.DirectionalLight( 0xffffff , 0.5);
-spotLight.position.set( 100, 1000, 100 );
+spotLight.position.set( 400, 300, 800 );
 
 spotLight.castShadow = true;
 
@@ -36,13 +46,16 @@ let obj1;
 let mousesX;
 let mousesY;
 
-camera.position.z = 17;
+camera.position.z = 15;
 camera.position.y = 5;
 camera.rotation.z = 0.00;
 
-document.addEventListener( 'mousemove', onMouseMove, false );
-document.addEventListener( 'mousedown', onDocumentMouseDown, false );
-document.addEventListener( 'mouseup', onDocumentMouseUp, false);
+let savedCameraRotation = camera.rotation.z;
+
+// // Uncomment this section in order to re-enable the mouse
+// document.addEventListener( 'mousemove', onMouseMove, false );
+// document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+// document.addEventListener( 'mouseup', onDocumentMouseUp, false);
 
 // instantiate a loader
 let MonkeyDude = new THREE.OBJLoader();
@@ -55,7 +68,7 @@ MonkeyDude.load(
 	 function ( object ) {
     object.traverse( function ( child ) {
     	if ( child instanceof THREE.Mesh ) {
-          child.material.color.setHex(0xeeff00);
+          child.material.color.setHex(808080);
       }})
 		obj1 = object;
 	 },
@@ -105,12 +118,12 @@ function whileMouseDown() {
 }
 
 function afterLoading() {
-	// this becomes new main
-	let floor = new THREE.BoxGeometry( 20, 1, 20 );
-	let floormat = new THREE.MeshBasicMaterial( { color: 0xff0094 }  );
+		// this becomes new main
+		let floor = new THREE.BoxGeometry( 20, 1, 20 );
+		let floormat = new THREE.MeshBasicMaterial( { color: 0xff0094 }  );
 
-	let boundary = obj1.clone();
-		boundary.scale.x = 1;
+		boundary = obj1.clone();
+		boundary.scale.x = 0.4;
 		boundary.scale.y = 1;
 		boundary.scale.z = 1;
 		boundary.position.y = 5
@@ -118,32 +131,122 @@ function afterLoading() {
 		boundary.rotation.x = 1.6;
 		scene.add(boundary);
 
-		// How to add cubes at origin
-		// let testCube = addCube("fdf");
-		// scene.add( testCube );
+		//How to add cubes at origin
+		let brick = addCube("dirt");
+		brick.addEventListener
+		brick.position.y += 8;
+		brick.position.x -= 4;
+		brick.type = "collide";
+		brick.hit = false;
+		brick.mat = Math.floor(Math.random() * 4);
 
 
-// 		// Adding Cube With texture
+		for( let h = 0; h <= 7; h++) {
+			let temp = brick.clone();
+			let textNum = Math.floor(Math.random() * 4);
+			console.log(textNum);
+			let tempMat = newCubeMat(textNum);
+			temp.mat = textNum;
+			temp.material = tempMat;
+			temp.position.x += h;
+			temp.type = "collide";
+			temp.hit = false;
+			scene.add(temp);
+		}
+		scene.add( brick );
 
 
-		cube = addCube("stone");
+// 	// Adding Cube With texture
+		//cube = addCube("stone");
 		let geometry = new THREE.BoxGeometry( 2, 0.3, 2 );
 		let materialboi = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
 		cube = new THREE.Mesh( geometry, materialboi );
 		cube.position.y -= 0.7;
 		scene.add( cube );
 
-    	geometry = new THREE.SphereGeometry( 0.2, 32, 32 );
+    geometry = new THREE.SphereGeometry( ballSize, 32, 32 );
 		let material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
 		ball = new THREE.Mesh( geometry, material );
 		ball.position.y += 4;
+		ball.matrixAutoUpdate = true;
 		scene.add( ball );
 
 	  animate();
 }
 
+function flipScreen(){
+		debounce = false;
+		if (flipped == false) {
+			camera.rotation.z += 0.01;
+			if (camera.rotation.z >= Math.PI) {
+				flipped = true;
+				ballMoving = true;
+				if (repeater != null) {
+					clearTimeout(repeater);
+					repeater = null;
+				}
+				debounce = true;
+			}
+		} else {
+			camera.rotation.z += 0.01;
+			if (camera.rotation.z >= Math.PI*2) {
+				flipped = false;
+				ballMoving = true;
+				if (repeater != null) {
+					clearTimeout(repeater);
+					repeater = null;
+				}
+				camera.rotation.z = savedCameraRotation;
+				debounce = true;
+			}
+		}
+	if (repeater!=null) {
+		repeater = setTimeout(flipScreen, 1);
+	}
+}
+
+function mirrorScreen(){
+		debounce = false;
+		if (mirrored == false) {
+			camera.position.z -= 0.03;
+			//camera.rotation.y -= 0.01;
+			if (camera.position.z <= -5) {
+				camera.rotation.y += 0.01;
+				if (camera.rotation.y >= Math.PI) {
+					mirrored = true;
+					ballMoving = true;
+					console.log("Starting!" + camera.position.z);
+					if (repeater != null) {
+						clearTimeout(repeater);
+						repeater = null;
+					}
+					debounce = true;
+				}
+			}
+		} else { //lol
+			camera.position.z += 0.03;
+			//camera.rotation.y -= 0.01;
+			if (camera.position.z >= 5) {
+				camera.rotation.y -= 0.01;
+				if (camera.rotation.y <= 0) {
+					mirrored = false;S
+					ballMoving = true;
+					console.log("Ending!" + camera.position.z);
+					if (repeater != null) {
+						clearTimeout(repeater);
+						repeater = null;
+					}
+					debounce = true;
+				}
+			}
+		}
+	if (repeater!=null) {
+		repeater = setTimeout(mirrorScreen, 1);
+	}
+}
 
 
+//Controls the block that the ball bounces off.
 document.addEventListener('keydown',onDocumentKeyDown,false);
 function onDocumentKeyDown(event){
 		let delta = 1;
@@ -152,18 +255,31 @@ function onDocumentKeyDown(event){
 		switch(keycode){
 				case 37 : //left arrow
 				//camera.position.x = camera.position.x - delta;
-				cube.position.x = cube.position.x - delta;
+				if (cube.position.x > -5) {
+					cube.position.x = cube.position.x - delta;
+				}
 				break;
 				case 38 : // up arrow
-				//camera.position.y = camera.position.y - delta;
-				//cube.position.x = cube.position.x - delta;
+				//
+				//console.log(camera.rotation.z);
+				if (debounce == true) {
+					ballMoving = false;
+					repeater = setTimeout(flipScreen, 1);
+				}
+
 				break;
 				case 39 : // right arrow
 				//camera.position.x = camera.position.x + delta;
-				cube.position.x = cube.position.x + delta;
+				if (cube.position.x < 5) {
+					cube.position.x = cube.position.x + delta;
+				}
 				break;
 				case 40 : //down arrow
-				//camera.position.y = camera.position.y + delta;
+				//camera.rotation.z += 0.1;
+				if (debounce == true) {
+					ballMoving = false;
+					repeater = setTimeout(mirrorScreen, 1);
+				}
 				break;
 		}
 		document.addEventListener('keyup',onDocumentKeyUp,false);
@@ -172,17 +288,22 @@ function onDocumentKeyUp(event){
 	//document.removeEventListener('keydown',onDocumentKeyDown,false);
 }
 
-
+//This function gets called when the ball flies out of the screen.
 function startLoseScreen() {
+	//return to regular rotation
+	camera.rotation.z = savedCameraRotation;
+	ballMoving = false;
+
 	let text2 = document.createElement('div');
 	text2.style.position = 'absolute';
+	//console.log();
 	//text2.style.zIndex = 1;    // if you still don't see the label, try uncommenting this
-	text2.style.width = 1000;
-	text2.style.height = 1000;
+	text2.style.width = 100;
+	text2.style.height = 100;
 	text2.style.backgroundColor = "red";
 	text2.innerHTML = "YOU LOSE";
 	text2.style.top = 100 + 'px'; // 200 + 'px'
-	text2.style.left = 324 + 'px'; //200 + 'px'
+	text2.style.left = window.innerWidth/2.6 + 'px'; //200 + 'px'
 	document.body.appendChild(text2);
 }
 
@@ -192,34 +313,95 @@ let ballZ = 0;
 
 function ballPhysics(ball) {
 
-	ball.position.x += ballX
-	ball.position.y += ballY
-	ball.position.z += ballZ
-	//console.log(ball.position.y);
+	if (ballMoving == true) {
+		ball.position.x += ballX
+		ball.position.y += ballY
+		//ball.position.z += ballZ
+	}
 
 	let ballPos = new THREE.Vector3(ball.position.x, ball.position.y, ball.position.z);
 	let cubePos = new THREE.Vector3(cube.position.x, cube.position.y, cube.position.z);
 	let dist = ballPos.distanceTo(cubePos);
 
-	if (ball.position.y > 10) {
+	if (ball.position.y > 10 - ballSize) {
 		ballY = ballY * -1;
 	} else if (ball.position.y < -2) {
 		startLoseScreen();
 	}
-	if (ball.position.x < -5 || ball.position.x > 5) {
+	if (ball.position.x < -5 + ballSize || ball.position.x > 5 - ballSize) {
 		ballX = ballX * -1;
 	}
-	if (dist < 0.5) {
+	if (dist < 0.7) {
 		ballY = Math.abs(ballY * -1);
+		//camera.rotation.z += 1; //Math.random() +
+		//boundary.rotateX(90);
 	}
-
 
 };
 
 function animate() {
 	requestAnimationFrame( animate );
   	ballPhysics(ball);
+  	collisions();
 	renderer.render( scene, camera );
+}
+
+
+function collisions() {
+	scene.traverse( function( node ) {
+
+    if ( node instanceof THREE.Mesh ) {
+
+        if( node.type == "collide"){
+        	// console.log(node.position.x + " and " + ball.position.x);
+        	let collideX = node.position.x;
+        	let ballyboiX = ball.position.x;
+
+        	let collideY = node.position.y;
+        	let ballyboiY = ball.position.y;
+
+        	let radius = 0.5;
+
+        	// tests for collisions here
+        	if( (collideX -  radius) < ballyboiX && (collideX + radius) > ballyboiX) {
+        		if( (collideY - radius) < ballyboiY && (collideY + radius) > ballyboiY) {
+        				if( !node.hit){
+        					node.hit = true;
+        					// testing which side it hit on to see how to move ball
+        					if ( Math.abs(collideX + radius - ballyboiX) > Math.abs(collideY + radius - ballyboiY)) {
+        						console.log("Top or bottom");
+        						ballY = ballY * (-1);
+        						if( flipped && mirrored && node.mat == 3) {
+        							scene.remove(node);
+        						} else if( flipped && !mirrored && node.mat == 2) {
+        							scene.remove(node);
+        						} else if( !flipped && mirrored && node.mat == 1) {
+        							scene.remove(node);
+        						} else if( !flipped && !mirrored && node.mat == 0) {
+        							scene.remove(node);
+        						}
+        					} else {
+        						console.log("sides");
+        						ballX = ballX * (-1);
+        						if( flipped && mirrored && node.mat == 3) {
+        							scene.remove(node);
+        						} else if( flipped && !mirrored && node.mat == 2) {
+        							scene.remove(node);
+        						} else if( !flipped && mirrored && node.mat == 1) {
+        							scene.remove(node);
+        						} else if( !flipped && !mirrored && node.mat == 0) {
+        							scene.remove(node);
+        					}
+        					}
+        				}
+
+        		}
+        	}
+        }
+
+    }
+
+} );
 }
 
 function addCube(ballType = "dirt") {
@@ -252,9 +434,37 @@ function addCube(ballType = "dirt") {
 		}
 
 
-
 		let cube = new THREE.Mesh( geometry, materialboi );
 		return cube;
+}
+
+function newCubeMat(ballType = "dirt") {
+		let matLoader = new THREE.TextureLoader();
+		let materialboi;
+
+		if( ballType == 0) {
+			materialboi = new THREE.MeshBasicMaterial( {
+			map: matLoader.load('grass/dirt.jpg'),
+			} );
+		} else if ( ballType == 1) {
+			materialboi = new THREE.MeshBasicMaterial( {
+			map: matLoader.load('grass/cobblestone.png'),
+			} );
+		} else if ( ballType == 2) {
+			materialboi = new THREE.MeshBasicMaterial( {
+			map: matLoader.load('grass/stone.jpg'),
+			} );
+		}  else if ( ballType == 3) {
+			materialboi = new THREE.MeshBasicMaterial( {
+			map: matLoader.load('grass/lamp.jpg'),
+			} );
+		} else {
+			materialboi = new THREE.MeshBasicMaterial( {
+			map: matLoader.load('grass/dirt.jpg'),
+			} );
+		}
+
+		return materialboi;
 }
 
 
