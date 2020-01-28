@@ -147,8 +147,8 @@ function afterLoading() {
 		//How to add cubes at origin
 		let brick = addCube("dirt");
 		brick.addEventListener
-		brick.position.y += 8;
-		brick.position.x -= 4;
+		brick.position.y += 7;
+		brick.position.x -= 3.5;
 		brick.type = "collide";
 		brick.hit = false;
 		//brick.mat = Math.floor(Math.random() * 4);
@@ -156,7 +156,7 @@ function afterLoading() {
 		brickTemplate = brick.clone();
 
 
-		for( let h = 0; h < 9; h++) {
+		for( let h = 0; h < 8; h++) {
 			for( let j = 0; j < increaseRow; j++) {
 				let temp = brick.clone();
 				let textNum = 0;
@@ -561,7 +561,7 @@ function newCubeMat(ballType) {
 
 
 function createNewSet() {
-	for( let h = 0; h < 9; h++) {
+	for( let h = 0; h < 8; h++) {
 		for( let j = 0; j < increaseRow; j++) {
 			let temp = brickTemplate.clone();
 			let textNum = Math.floor(Math.random() * level);
