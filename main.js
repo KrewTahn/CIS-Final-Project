@@ -146,7 +146,7 @@ function afterLoading() {
 			let textNum = Math.floor(Math.random() * 4);
 			console.log(textNum);
 			let tempMat = newCubeMat(textNum);
-			brick.mat = textNum;
+			temp.mat = textNum;
 			temp.material = tempMat;
 			temp.position.x += h;
 			temp.type = "collide";
@@ -366,15 +366,33 @@ function collisions() {
         	if( (collideX -  radius) < ballyboiX && (collideX + radius) > ballyboiX) {
         		if( (collideY - radius) < ballyboiY && (collideY + radius) > ballyboiY) {
         				if( !node.hit){
-        					scene.remove(node);
+        					
         					node.hit = true;
         					// testing which side it hit on to see how to move ball
         					if ( Math.abs(collideX + radius - ballyboiX) > Math.abs(collideY + radius - ballyboiY)) {
         						console.log("Top or bottom");
         						ballY = ballY * (-1);
+        						if( flipped && mirrored && node.mat == 3) {
+        							scene.remove(node);
+        						} else if( flipped && !mirrored && node.mat == 2) {
+        							scene.remove(node);
+        						} else if( !flipped && mirrored && node.mat == 1) {
+        							scene.remove(node);
+        						} else if( !flipped && !mirrored && node.mat == 0) {
+        							scene.remove(node);
+        						}
         					} else {
         						console.log("sides");
         						ballX = ballX * (-1);
+        						if( flipped && mirrored && node.mat == 3) {
+        							scene.remove(node);
+        						} else if( flipped && !mirrored && node.mat == 2) {
+        							scene.remove(node);
+        						} else if( !flipped && mirrored && node.mat == 1) {
+        							scene.remove(node);
+        						} else if( !flipped && !mirrored && node.mat == 0) {
+        							scene.remove(node);
+        					}
         					}
         				}
 
