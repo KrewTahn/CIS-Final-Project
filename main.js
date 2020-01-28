@@ -3,7 +3,7 @@ scene.background = new THREE.Color( 0x535353 );
 let camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 10000 );
 
 let renderer = new THREE.WebGLRenderer();
-renderer.setSize( window.innerWidth * 0.9, window.innerHeight * .9);
+renderer.setSize( window.innerWidth * 0.9, window.innerHeight * .8);
 document.body.appendChild( renderer.domElement );
 
 let geometry = new THREE.BoxGeometry( 1, 1, 1 );
