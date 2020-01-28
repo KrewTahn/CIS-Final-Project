@@ -31,6 +31,8 @@ let increaseRow = 1;
 let brickTemplate = null;
 let lives = 3;
 
+let livesText = document.createElement('div');
+
 
 let spotLight = new THREE.DirectionalLight( 0xffffff , 0.5);
 spotLight.position.set( 400, 300, 800 );
@@ -151,7 +153,8 @@ function afterLoading() {
 		brick.position.x -= 4;
 		brick.type = "collide";
 		brick.hit = false;
-		brick.mat = Math.floor(Math.random() * 4);
+		//brick.mat = Math.floor(Math.random() * 4);
+		brick.mat = 0;
 		brickTemplate = brick.clone();
 
 
@@ -191,17 +194,17 @@ function afterLoading() {
 	  animate();
 
 
-		let text2 = document.createElement('div');
-		text2.style.position = 'absolute';
+
+		livesText.style.position = 'absolute';
 		//console.log();
 		//text2.style.zIndex = 1;    // if you still don't see the label, try uncommenting this
-		text2.style.width = 100;
-		text2.style.height = 100;
-		text2.style.backgroundColor = "blue";
-		text2.innerHTML = "Lives: " + lives;
-		text2.style.top = 100 + 'px'; // 200 + 'px'
-		text2.style.left = window.innerWidth/8 + 'px'; //200 + 'px'
-		document.body.appendChild(text2);
+		livesText.style.width = 100;
+		livesText.style.height = 100;
+		livesText.style.backgroundColor = "blue";
+		livesText.innerHTML = "Lives: " + lives;
+		livesText.style.top = 100 + 'px'; // 200 + 'px'
+		livesText.style.left = window.innerWidth/8 + 'px'; //200 + 'px'
+		document.body.appendChild(livesText);
 }
 
 function flipScreen(){
@@ -357,6 +360,8 @@ function ballPhysics(ball) {
 		ballY = ballY * -1;
 	} else if (ball.position.y < -2) {
 		//startLoseScreen();
+		lives -= 1;
+		livesText.innerHTML = "Lives: " + lives;
 		ballY = ballY * -1;
 	}
 	if (ball.position.x < -5 + ballSize || ball.position.x > 5 - ballSize) {
