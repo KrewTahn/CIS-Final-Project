@@ -46,7 +46,7 @@ let obj1;
 let mousesX;
 let mousesY;
 
-camera.position.z = 17;
+camera.position.z = 15;
 camera.position.y = 5;
 camera.rotation.z = 0.00;
 
@@ -366,7 +366,7 @@ function collisions() {
         	if( (collideX -  radius) < ballyboiX && (collideX + radius) > ballyboiX) {
         		if( (collideY - radius) < ballyboiY && (collideY + radius) > ballyboiY) {
         				if( !node.hit){
-        					scene.remove(node);
+        					//scene.remove(node);
         					node.hit = true;
         					// testing which side it hit on to see how to move ball
         					if ( Math.abs(collideX + radius - ballyboiX) > Math.abs(collideY + radius - ballyboiY)) {
