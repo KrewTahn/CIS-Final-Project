@@ -31,7 +31,7 @@ let level = 1;
 let brickCount = 0;
 let increaseRow = 1;
 let brickTemplate = null;
-let lives = 3;
+let lives = 5;
 
 let livesText = document.createElement('div');
 
@@ -358,8 +358,9 @@ function startLoseScreen() {
 	document.body.appendChild(text2);
 }
 
-let ballX = 0.1;
-let ballY = 0.1;
+let speed = 0.07
+let ballX = speed;
+let ballY = speed;
 let ballZ = 0;
 
 function ballPhysics(ball) {
@@ -375,15 +376,21 @@ function ballPhysics(ball) {
 	let dist = ballPos.distanceTo(cubePos);
 
 	if (ball.position.y > 10 - ballSize) {
-		ballY = ballY * -1;
+		ballY = -speed;
 	} else if (ball.position.y < -2) {
-		//startLoseScreen();
+		if (lives > 1) {
 		lives -= 1;
 		livesText.innerHTML = "Lives: " + lives;
 		ballY = ballY * -1;
+		}	else {
+			startLoseScreen();
+		}
 	}
-	if (ball.position.x < -5 + ballSize || ball.position.x > 5 - ballSize) {
-		ballX = ballX * -1;
+	if (ball.position.x < -5 + ballSize) {
+		ballX = speed;
+	}
+	if (ball.position.x > 5 - ballSize) {
+		ballX = -speed;
 	}
 	if (dist < 0.7) {
 		ballY = Math.abs(ballY * -1);
@@ -585,8 +592,14 @@ function createNewSet() {
 function checkForEnd() {
 	if (brickCount < 1) {
 		level ++;
+		lives = 5;
+		if (speed < 0.5) {
+			speed += 0.01
+		}
 		if (level % 2 == 0) {
-			increaseRow++;
+			if (increaseRow < 5) {
+				increaseRow++;
+			}
 		}
 		createNewSet();
 	}
