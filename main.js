@@ -25,7 +25,7 @@ let repeater = null;
 
 let debounce = true;
 
-let level = 1;
+let level = 7;
 let brickCount = 0;
 let brickTemplate = null;
 
@@ -49,6 +49,8 @@ let isClicked = 0;
 let obj1;
 let mousesX;
 let mousesY;
+
+let hitbuffer = 0;
 
 camera.position.z = 15;
 camera.position.y = 5;
@@ -159,7 +161,7 @@ function afterLoading() {
 			brickCount += 1;
 			scene.add(temp);
 		}
-		scene.add( brick );
+		// scene.add( brick );
 
 
 // 	// Adding Cube With texture
@@ -170,14 +172,14 @@ function afterLoading() {
 		cube.position.y -= 0.7;
 		scene.add( cube );
 
-    geometry = new THREE.SphereGeometry( ballSize, 32, 32 );
+    	geometry = new THREE.SphereGeometry( ballSize, 32, 32 );
 		let material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
 		ball = new THREE.Mesh( geometry, material );
 		ball.position.y += 4;
 		ball.matrixAutoUpdate = true;
 		scene.add( ball );
 
-	  //animate();
+	  animate();
 }
 
 function flipScreen(){
@@ -358,11 +360,18 @@ function collisions() {
         	let collideY = node.position.y;
         	let ballyboiY = ball.position.y;
 
-        	let radius = 0.5;
+        	let radius = 0.7;
 
-        	
+        	if( hitbuffer != 0) {
+        		hitbuffer++;
+        		if(hitbuffer % 100 == 0) {
+        			hitbuffer = 0;
+        			// console.log("ready for next hit...");
+        		}
+        	}
 
-        	// tests for collisions here
+        	// This means first time getting hit in recent evens
+          	// tests for collisions here
         	if( (collideX -  radius) < ballyboiX && (collideX + radius) > ballyboiX) {
         		if( (collideY - radius) < ballyboiY && (collideY + radius) > ballyboiY) {
         				if( !node.hit){
@@ -382,28 +391,40 @@ function collisions() {
         						}
         					
 
-        					// we need x and y relative to origin of object
-        					let xTrig = (collideX - ballyboiX) * (-1);
-        					let yTrig = (collideY - ballyboiY) * (-1);
+        					// we need to check if recent collisions so that if the ball
+        					// is stuck in the cube and has registered a hit it does 
+        					// not register as multiple hits
+        					let hitCounter = hitbuffer;
+        					if( hitCounter == 0) {
+        						// This means first time getting hit in recent evens
+        						// we need x and y relative to origin of object
+        						let xTrig = (collideX - ballyboiX) * (-1);
+        						let yTrig = (collideY - ballyboiY) * (-1);
 
-        					let angleRad = Math.atan2(xTrig , yTrig);
-        					let angleDeg = Math.abs(angleRad * 180 / Math.PI);
-        					console.log(xTrig + "  and " + yTrig  + "  DEG "  + angleDeg);
+        						let angleRad = Math.atan2(xTrig , yTrig);
+        						let angleDeg = Math.abs(angleRad * 180 / Math.PI);
 
 
-        					if( angleDeg >= 45 && angleDeg <= 135) {
-        						console.log("TOP");
-        						ballY = ballY * (-1);
-        					} else if ( angleDeg <= 45 || angleDeg >= 315) {
-        						console.log("RIGHT");
-        						ballX = ballX * (-1);
-        					} else if ( angleDeg >= 135 && angleDeg <= 225) {
-        						console.log("LEFT");
-        						ballX = ballX * (-1);
-        					} else if ( angleDeg >= 225 && angleDeg <= 315) {
-        						console.log("Bottom");
-        						ballY = ballY * (-1);
-        					}
+        						if( angleDeg >= 45 && angleDeg <= 135) {
+        							// console.log("Right");
+        							ballX = ballX * (-1);
+        						} else if ( angleDeg <= 45 || angleDeg >= 315) {
+        							// console.log("Bottom");
+        							ballY = ballY * (-1);
+        						} else if ( angleDeg >= 135 && angleDeg <= 225) {
+        							// console.log("top");
+        							ballY = ballY * (-1);
+        						} else if ( angleDeg >= 225 && angleDeg <= 315) {
+        							// console.log("left");
+        							ballX = ballX * (-1);
+        						}
+
+        						// this breaks it out of loop
+        						hitbuffer++;
+        						// console.log("hit! Stopping...");
+        					} 
+
+        					
         					// if ( Math.abs(collideX + radius - ballyboiX) > Math.abs(collideY + radius - ballyboiY)) {
         					// 	console.log("Top");
         					// 	ballY = ballY * (-1);
