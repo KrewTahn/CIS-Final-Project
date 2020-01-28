@@ -223,7 +223,7 @@ function mirrorScreen(){
 					debounce = true;
 				}
 			}
-		} else {
+		} else { //lol
 			camera.position.z += 0.03;
 			//camera.rotation.y -= 0.01;
 			if (camera.position.z >= 5) {
