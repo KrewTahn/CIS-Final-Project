@@ -156,14 +156,26 @@ function flipScreen(){
 			if (camera.rotation.z >= Math.PI) {
 				flipped = true;
 				ballMoving = true;
-				repeater.clearTimeout();
-				repeater = null;
+				if (repeater != null) {
+					clearTimeout(repeater);
+					repeater = null;
+				}
 			}
 		} else {
-			camera.rotation.z = savedCameraRotation;
-			flipped = false;
+			camera.rotation.z += 0.01;
+			if (camera.rotation.z >= Math.PI*2) {
+				flipped = false;
+				ballMoving = true;
+				if (repeater != null) {
+					clearTimeout(repeater);
+					repeater = null;
+				}
+				camera.rotation.z = savedCameraRotation;
+			}
 		}
+	if (repeater!=null) {
 		repeater = setTimeout(flipScreen, 10);
+	}
 }
 
 //Controls the block that the ball bounces off.
@@ -183,8 +195,7 @@ function onDocumentKeyDown(event){
 				//
 				console.log(camera.rotation.z);
 				ballMoving = false;
-				flipScreen();
-
+				repeater = setTimeout(flipScreen, 10);
 
 
 				break;
