@@ -27,6 +27,7 @@ let debounce = true;
 
 let level = 7;
 let brickCount = 0;
+let increaseRow = 1;
 let brickTemplate = null;
 
 
@@ -148,20 +149,22 @@ function afterLoading() {
 		brickTemplate = brick.clone();
 
 
-		for( let h = 0; h <= level; h++) {
-			let temp = brick.clone();
-			let textNum = Math.floor(Math.random() * 4);
-			console.log(textNum);
-			let tempMat = newCubeMat(textNum);
-			temp.mat = textNum;
-			temp.material = tempMat;
-			temp.position.x += h + 0;
-			temp.type = "collide";
-			temp.hit = false;
-			brickCount += 1;
-			scene.add(temp);
+		for( let h = 0; h < 9; h++) {
+			for( let j = 0; j < increaseRow; j++) {
+				let temp = brick.clone();
+				let textNum = 0;
+				//console.log(textNum);
+				let tempMat = newCubeMat(textNum);
+				temp.mat = textNum;
+				temp.material = tempMat;
+				temp.position.x += h + 0;
+				temp.position.y += j + 0;
+				temp.type = "collide";
+				temp.hit = false;
+				brickCount += 1;
+				scene.add(temp);
+			}
 		}
-		// scene.add( brick );
 
 
 // 	// Adding Cube With texture
@@ -334,7 +337,8 @@ function ballPhysics(ball) {
 	if (ball.position.y > 10 - ballSize) {
 		ballY = ballY * -1;
 	} else if (ball.position.y < -2) {
-		startLoseScreen();
+		//startLoseScreen();
+		ballY = ballY * -1;
 	}
 	if (ball.position.x < -5 + ballSize || ball.position.x > 5 - ballSize) {
 		ballX = ballX * -1;
@@ -379,17 +383,25 @@ function collisions() {
         					if( flipped && mirrored && node.mat == 3) {
         							scene.remove(node);
         							node.hit = true;
+											brickCount -= 1;
+											console.log("bc" + brickCount);
         						} else if( flipped && !mirrored && node.mat == 2) {
         							scene.remove(node);
         							node.hit = true;
+											brickCount -= 1;
+											console.log("bc" + brickCount);
         						} else if( !flipped && mirrored && node.mat == 1) {
         							scene.remove(node);
         							node.hit = true;
+											brickCount -= 1;
+											console.log("bc" + brickCount);
         						} else if( !flipped && !mirrored && node.mat == 0) {
         							scene.remove(node);
         							node.hit = true;
+											brickCount -= 1;
+											console.log("bc" + brickCount);
         						}
-        					
+
 
         					// we need to check if recent collisions so that if the ball
         					// is stuck in the cube and has registered a hit it does 
@@ -509,8 +521,35 @@ function newCubeMat(ballType = "dirt") {
 
 
 
-function checkForEnd() {
+function createNewSet() {
+	for( let h = 0; h < 9; h++) {
+		for( let j = 0; j < increaseRow; j++) {
+			let temp = brickTemplate.clone();
+			let textNum = Math.floor(Math.random() * level);
+			if (textNum > 4) {
+				textNum = Math.floor(Math.random() * 4)
+			}
+			let tempMat = newCubeMat(textNum);
+			temp.mat = textNum;
+			temp.material = tempMat;
+			temp.position.x += h + 0;
+			temp.position.y += j + 0;
+			temp.type = "collide";
+			temp.hit = false;
+			brickCount += 1;
+			scene.add(temp);
+		}
+	}
+}
 
+function checkForEnd() {
+	if (brickCount < 1) {
+		level ++;
+		if (level % 5 == 0) {
+			increaseRow++;
+		}
+		createNewSet();
+	}
 }
 
 
