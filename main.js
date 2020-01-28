@@ -42,6 +42,8 @@ camera.position.z = 17;
 camera.position.y = 5;
 camera.rotation.z = 0.00;
 
+let savedCameraRotation = camera.rotation.z;
+
 // // Uncomment this section in order to re-enable the mouse
 // document.addEventListener( 'mousemove', onMouseMove, false );
 // document.addEventListener( 'mousedown', onDocumentMouseDown, false );
@@ -134,13 +136,30 @@ function afterLoading() {
 		cube.position.y -= 0.7;
 		scene.add( cube );
 
-    geometry = new THREE.SphereGeometry( 0.2, 32, 32 );
+    geometry = new THREE.SphereGeometry( ballSize, 32, 32 );
 		let material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
 		ball = new THREE.Mesh( geometry, material );
 		ball.position.y += 4;
+		ball.matrixAutoUpdate = true;
 		scene.add( ball );
 
 	  animate();
+}
+
+function flipScreen(){
+		if (flipped == false) {
+			camera.rotation.z += 0.01;
+			if (camera.rotation.z >= Math.PI) {
+				flipped = true;
+				ballMoving = true;
+				repeater.clearTimeout();
+				repeater = null;
+			}
+		} else {
+			camera.rotation.z = savedCameraRotation;
+			flipped = false;
+		}
+		repeater = setTimeout(flipScreen, 10);
 }
 
 //Controls the block that the ball bounces off.
@@ -157,8 +176,13 @@ function onDocumentKeyDown(event){
 				}
 				break;
 				case 38 : // up arrow
-				camera.position.z = camera.position.z - delta;
-				//cube.position.x = cube.position.x - delta;
+				//
+				console.log(camera.rotation.z);
+				ballMoving = false;
+				flipScreen();
+
+
+
 				break;
 				case 39 : // right arrow
 				//camera.position.x = camera.position.x + delta;
@@ -167,7 +191,7 @@ function onDocumentKeyDown(event){
 				}
 				break;
 				case 40 : //down arrow
-				camera.position.z = camera.position.z + delta;
+				//camera.rotation.z += 0.1;
 				break;
 		}
 		document.addEventListener('keyup',onDocumentKeyUp,false);
@@ -178,6 +202,10 @@ function onDocumentKeyUp(event){
 
 //This function gets called when the ball flies out of the screen.
 function startLoseScreen() {
+	//return to regular rotation
+	camera.rotation.z = savedCameraRotation;
+	ballMoving = false;
+
 	let text2 = document.createElement('div');
 	text2.style.position = 'absolute';
 	//console.log();
@@ -197,27 +225,27 @@ let ballZ = 0;
 
 function ballPhysics(ball) {
 
-	if (ball.position.y > -5) {
+	if (ballMoving == true) {
 		ball.position.x += ballX
 		ball.position.y += ballY
 		ball.position.z += ballZ
 	}
-	//console.log(ball.position.y);
 
 	let ballPos = new THREE.Vector3(ball.position.x, ball.position.y, ball.position.z);
 	let cubePos = new THREE.Vector3(cube.position.x, cube.position.y, cube.position.z);
 	let dist = ballPos.distanceTo(cubePos);
 
-	if (ball.position.y > 10) {
+	if (ball.position.y > 10 - ballSize) {
 		ballY = ballY * -1;
 	} else if (ball.position.y < -2) {
 		startLoseScreen();
 	}
-	if (ball.position.x < -5 || ball.position.x > 5) {
+	if (ball.position.x < -5 + ballSize || ball.position.x > 5 - ballSize) {
 		ballX = ballX * -1;
 	}
-	if (dist < 0.5) {
+	if (dist < 0.7) {
 		ballY = Math.abs(ballY * -1);
+		//camera.rotation.z += 1; //Math.random() +
 		//boundary.rotateX(90);
 	}
 
