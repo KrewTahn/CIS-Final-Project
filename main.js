@@ -153,7 +153,7 @@ function afterLoading() {
 			let tempMat = newCubeMat(textNum);
 			temp.mat = textNum;
 			temp.material = tempMat;
-			temp.position.x += h;
+			temp.position.x += h + 0;
 			temp.type = "collide";
 			temp.hit = false;
 			brickCount += 1;
@@ -346,13 +346,10 @@ function ballPhysics(ball) {
 };
 
 
-
-
 function collisions() {
 	scene.traverse( function( node ) {
-
     if ( node instanceof THREE.Mesh ) {
-
+    	if( node != undefined ) {
         if( node.type == "collide"){
         	// console.log(node.position.x + " and " + ball.position.x);
         	let collideX = node.position.x;
@@ -363,37 +360,57 @@ function collisions() {
 
         	let radius = 0.5;
 
+        	
+
         	// tests for collisions here
         	if( (collideX -  radius) < ballyboiX && (collideX + radius) > ballyboiX) {
         		if( (collideY - radius) < ballyboiY && (collideY + radius) > ballyboiY) {
         				if( !node.hit){
-        					node.hit = true;
-        					// testing which side it hit on to see how to move ball
-        					if ( Math.abs(collideX + radius - ballyboiX) > Math.abs(collideY + radius - ballyboiY)) {
-        						console.log("Top or bottom");
-        						ballY = ballY * (-1);
-        						if( flipped && mirrored && node.mat == 3) {
+        					// checks for texture
+        					if( flipped && mirrored && node.mat == 3) {
         							scene.remove(node);
+        							node.hit = true;
         						} else if( flipped && !mirrored && node.mat == 2) {
         							scene.remove(node);
+        							node.hit = true;
         						} else if( !flipped && mirrored && node.mat == 1) {
         							scene.remove(node);
+        							node.hit = true;
         						} else if( !flipped && !mirrored && node.mat == 0) {
         							scene.remove(node);
+        							node.hit = true;
         						}
-        					} else {
-        						console.log("sides");
+        					
+
+        					// we need x and y relative to origin of object
+        					let xTrig = (collideX - ballyboiX) * (-1);
+        					let yTrig = (collideY - ballyboiY) * (-1);
+
+        					let angleRad = Math.atan2(xTrig , yTrig);
+        					let angleDeg = Math.abs(angleRad * 180 / Math.PI);
+        					console.log(xTrig + "  and " + yTrig  + "  DEG "  + angleDeg);
+
+
+        					if( angleDeg >= 45 && angleDeg <= 135) {
+        						console.log("TOP");
+        						ballY = ballY * (-1);
+        					} else if ( angleDeg <= 45 || angleDeg >= 315) {
+        						console.log("RIGHT");
         						ballX = ballX * (-1);
-        						if( flipped && mirrored && node.mat == 3) {
-        							scene.remove(node);
-        						} else if( flipped && !mirrored && node.mat == 2) {
-        							scene.remove(node);
-        						} else if( !flipped && mirrored && node.mat == 1) {
-        							scene.remove(node);
-        						} else if( !flipped && !mirrored && node.mat == 0) {
-        							scene.remove(node);
+        					} else if ( angleDeg >= 135 && angleDeg <= 225) {
+        						console.log("LEFT");
+        						ballX = ballX * (-1);
+        					} else if ( angleDeg >= 225 && angleDeg <= 315) {
+        						console.log("Bottom");
+        						ballY = ballY * (-1);
         					}
-        					}
+        					// if ( Math.abs(collideX + radius - ballyboiX) > Math.abs(collideY + radius - ballyboiY)) {
+        					// 	console.log("Top");
+        					// 	ballY = ballY * (-1);
+        					// } else {
+        					// 	console.log("sides");
+        					// 	ballX = ballX * (-1);
+        					// }
         				}
 
         		}
@@ -401,6 +418,7 @@ function collisions() {
         }
 
     }
+}
 
 } );
 }
