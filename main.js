@@ -31,7 +31,7 @@ audioLoader.load( 'pollenjocks.mp3', function( buffer ) {
 	sound.play();
 });
 
-let goingDown = true;
+let goingDown = true; //going down
 let ball = null;
 let cube = null;
 let indicator = null;
@@ -181,21 +181,23 @@ function afterLoading() {
 
 		// This is the initial drawing of cubes for level one,
 		// every other generation of levels is in the functions below
-		for( let h = 0; h < 8; h++) {
-			for( let j = 0; j < increaseRow; j++) {
-				let temp = brick.clone();
-				let textNum = 0;
-				let tempMat = newCubeMat(textNum);
-				temp.mat = textNum;
-				temp.material = tempMat;
-				temp.position.x += h + 0;
-				temp.position.y += j + 0;
-				temp.type = "collide";
-				temp.hit = false;
-				brickCount += 1;
-				scene.add(temp);
-			}
-		}
+		// for( let h = 0; h < 8; h++) {
+		// 	for( let j = 0; j < increaseRow; j++) {
+		// 		let temp = brick.clone();
+		// 		let textNum = 0;
+		// 		let tempMat = newCubeMat(textNum);
+		// 		temp.mat = textNum;
+		// 		temp.material = tempMat;
+		// 		temp.position.x += h + 0;
+		// 		temp.position.y += j + 0;
+		// 		temp.type = "collide";
+		// 		temp.hit = false;
+		// 		brickCount += 1;
+		// 		scene.add(temp);
+		// 	}
+		// }
+
+		createNewSet();
 
 		let geometry = new THREE.BoxGeometry( 2, 0.3, 2 );
 		let materialboi = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
