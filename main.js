@@ -45,9 +45,9 @@ let repeater = null;
 
 let debounce = true;
 
-let level = 5;
+let level = 1;
 let brickCount = 0;
-let increaseRow = 5;
+let increaseRow = 1;
 let brickTemplate = null;
 let lives = 5;
 
