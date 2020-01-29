@@ -40,14 +40,17 @@ let boundary = null;
 let ballSize = 0.2; //This should be here
 let flipped = false;
 let mirrored = false;
-let ballMoving = true;
+let ballMoving = false;
 let repeater = null;
+
+let originX = 0;
+let originY = 0;
 
 let debounce = true;
 
-let level = 5;
+let level = 1;
 let brickCount = 0;
-let increaseRow = 5;
+let increaseRow = 1;
 let brickTemplate = null;
 let lives = 5;
 
@@ -181,21 +184,6 @@ function afterLoading() {
 
 		// This is the initial drawing of cubes for level one,
 		// every other generation of levels is in the functions below
-		// for( let h = 0; h < 8; h++) {
-		// 	for( let j = 0; j < increaseRow; j++) {
-		// 		let temp = brick.clone();
-		// 		let textNum = 0;
-		// 		let tempMat = newCubeMat(textNum);
-		// 		temp.mat = textNum;
-		// 		temp.material = tempMat;
-		// 		temp.position.x += h + 0;
-		// 		temp.position.y += j + 0;
-		// 		temp.type = "collide";
-		// 		temp.hit = false;
-		// 		brickCount += 1;
-		// 		scene.add(temp);
-		// 	}
-		// }
 
 		createNewSet();
 
@@ -205,11 +193,13 @@ function afterLoading() {
 		cube.position.y -= 0.7;
 		scene.add( cube );
 
-    	geometry = new THREE.SphereGeometry( ballSize, 32, 32 );
+    geometry = new THREE.SphereGeometry( ballSize, 32, 32 );
 		let material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
 		ball = new THREE.Mesh( geometry, material );
-		ball.position.y += 4;
+		ball.position.y += 3;
 		ball.matrixAutoUpdate = true;
+		originX = ball.position.x;
+		originY = ball.position.y;
 		scene.add( ball );
 
 		geometry = new THREE.BoxGeometry( 0.3, 12, 0.3 );
@@ -336,6 +326,9 @@ function onDocumentKeyDown(event){
 				//camera.position.x = camera.position.x - delta;
 				if (cube.position.x > -5) {
 					cube.position.x = cube.position.x - delta;
+					if (debounce == true) {
+						ballMoving = true;
+					}
 				}
 				break;
 				case 38 : // up arrow
@@ -351,6 +344,9 @@ function onDocumentKeyDown(event){
 				//camera.position.x = camera.position.x + delta;
 				if (cube.position.x < 5) {
 					cube.position.x = cube.position.x + delta;
+					if (debounce == true) {
+						ballMoving = true;
+					}
 				}
 				break;
 				case 40 : //down arrow
@@ -471,7 +467,7 @@ function collisions() {
         		if( (collideY - radius) < ballyboiY && (collideY + radius) > ballyboiY) {
         				if( !node.hit){
 
-        					
+
 
 
         					// checks for texture
@@ -639,6 +635,11 @@ function checkForEnd() {
 	if (brickCount < 1) {
 		level ++;
 		lives = 5;
+		ballMoving = false;
+		ball.position.x = originX;
+		ball.position.y = originY;
+		ballX = Math.abs(speed);
+		ballY = Math.abs(speed);
 		livesText.innerHTML = "Lives (" + lives + ") ---- Level (" + level + ")";
 		if (speed < 0.2) {
 			speed += 0.01
