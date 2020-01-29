@@ -45,9 +45,9 @@ let repeater = null;
 
 let debounce = true;
 
-let level = 1;
+let level = 5;
 let brickCount = 0;
-let increaseRow = 1;
+let increaseRow = 5;
 let brickTemplate = null;
 let lives = 5;
 
@@ -176,7 +176,7 @@ function afterLoading() {
 		brick.mat = 0;
 		brickTemplate = brick.clone();
 
-		setInterval(collisions(),10);
+		// setInterval(collisions(),10);
 
 
 		// This is the initial drawing of cubes for level one,
@@ -446,16 +446,7 @@ function collisions() {
         		if(hitbuffer % 90 == 0) {
         			hitbuffer = 0;
         			// console.log("ready for next hit...");
-        		}
-        	}
-
-        	// This means first time getting hit in recent evens
-          	// tests for collisions here
-        	if( (collideX -  radius) < ballyboiX && (collideX + radius) > ballyboiX) {
-        		if( (collideY - radius) < ballyboiY && (collideY + radius) > ballyboiY) {
-        				if( !node.hit){
-
-        					// sound effect boi
+        			// sound effect boi
         					// create an AudioListener and add it to the camera
 							var listenerse = new THREE.AudioListener();
 							camera.add( listenerse );
@@ -471,6 +462,16 @@ function collisions() {
 								soundse.setVolume( 0.5 );
 								soundse.play();
 							});
+        		}
+        	}
+
+        	// This means first time getting hit in recent evens
+          	// tests for collisions here
+        	if( (collideX -  radius) < ballyboiX && (collideX + radius) > ballyboiX) {
+        		if( (collideY - radius) < ballyboiY && (collideY + radius) > ballyboiY) {
+        				if( !node.hit){
+
+        					
 
 
         					// checks for texture
@@ -670,7 +671,7 @@ function takeDamage() {
 		audioLoadertd.load( 'robloxoof.mp3', function( buffertd ) {
 			soundtd.setBuffer( buffertd );
 			soundtd.setLoop( false );
-			soundtd.setVolume( 0.5 );
+			soundtd.setVolume( 1 );
 			soundtd.play();
 		});
 
