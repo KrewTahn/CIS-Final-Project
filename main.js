@@ -368,7 +368,7 @@ function startLoseScreen() {
 	//return to regular rotation
 	camera.rotation.z = savedCameraRotation;
 	ballMoving = false;
-
+	scene.remove(ball);
 	let text2 = document.createElement('div');
 	text2.style.position = 'absolute';
 	//console.log();
