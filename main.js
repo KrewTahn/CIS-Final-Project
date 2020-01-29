@@ -13,6 +13,24 @@ let material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
 let light = new THREE.AmbientLight( 0x404040 ); // soft white light
 scene.add( light );
 
+
+
+// create an AudioListener and add it to the camera
+var listener = new THREE.AudioListener();
+camera.add( listener );
+
+// create a global audio source
+var sound = new THREE.Audio( listener );
+
+// load a sound and set it as the Audio object's buffer
+var audioLoader = new THREE.AudioLoader();
+audioLoader.load( 'pollenjocks.mp3', function( buffer ) {
+	sound.setBuffer( buffer );
+	sound.setLoop( true );
+	sound.setVolume( 0.5 );
+	sound.play();
+});
+
 let goingDown = true;
 let ball = null;
 let cube = null;
@@ -158,12 +176,15 @@ function afterLoading() {
 		brick.mat = 0;
 		brickTemplate = brick.clone();
 
+		setInterval(collisions(),10);
 
+
+		// This is the initial drawing of cubes for level one,
+		// every other generation of levels is in the functions below
 		for( let h = 0; h < 8; h++) {
 			for( let j = 0; j < increaseRow; j++) {
 				let temp = brick.clone();
 				let textNum = 0;
-				//console.log(textNum);
 				let tempMat = newCubeMat(textNum);
 				temp.mat = textNum;
 				temp.material = tempMat;
@@ -176,16 +197,13 @@ function afterLoading() {
 			}
 		}
 
-
-// 	// Adding Cube With texture
-		//cube = addCube("stone");
 		let geometry = new THREE.BoxGeometry( 2, 0.3, 2 );
 		let materialboi = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
 		cube = new THREE.Mesh( geometry, materialboi );
 		cube.position.y -= 0.7;
 		scene.add( cube );
 
-    geometry = new THREE.SphereGeometry( ballSize, 32, 32 );
+    	geometry = new THREE.SphereGeometry( ballSize, 32, 32 );
 		let material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
 		ball = new THREE.Mesh( geometry, material );
 		ball.position.y += 4;
@@ -341,10 +359,6 @@ function onDocumentKeyDown(event){
 				}
 				break;
 		}
-		document.addEventListener('keyup',onDocumentKeyUp,false);
-}
-function onDocumentKeyUp(event){
-	//document.removeEventListener('keydown',onDocumentKeyDown,false);
 }
 
 //This function gets called when the ball flies out of the screen.
