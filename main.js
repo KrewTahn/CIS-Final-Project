@@ -14,6 +14,8 @@ let light = new THREE.AmbientLight( 0x404040 ); // soft white light
 scene.add( light );
 
 
+let doneLose = false;
+
 
 // create an AudioListener and add it to the camera
 var listener = new THREE.AudioListener();
@@ -376,6 +378,30 @@ function startLoseScreen() {
 	text2.style.top = 100 + 'px'; // 200 + 'px'
 	text2.style.left = window.innerWidth/2.6 + 'px'; //200 + 'px'
 	document.body.appendChild(text2);
+
+
+	if( !doneLose) {
+		// here we stop the music
+		sound.stop();
+
+		 // create an AudioListener and add it to the camera
+		var listenersb = new THREE.AudioListener();
+		camera.add( listenersb );
+
+		// create a global audio source
+		var soundsb = new THREE.Audio( listenersb );
+
+		// load a sound and set it as the Audio object's buffer
+		var audioLoadersb = new THREE.AudioLoader();
+		audioLoadersb.load( 'justdoit.mp3', function( buffersb ) {
+			soundsb.setBuffer( buffersb );
+			soundsb.setLoop( false );
+			soundsb.setVolume( 3 );
+			soundsb.play();
+		});
+		doneLose = true;
+	}
+	
 }
 
 let speed = 0.07
