@@ -454,6 +454,25 @@ function collisions() {
         	if( (collideX -  radius) < ballyboiX && (collideX + radius) > ballyboiX) {
         		if( (collideY - radius) < ballyboiY && (collideY + radius) > ballyboiY) {
         				if( !node.hit){
+
+        					// sound effect boi
+        					// create an AudioListener and add it to the camera
+							var listenerse = new THREE.AudioListener();
+							camera.add( listenerse );
+
+							// create a global audio source
+							var soundse = new THREE.Audio( listenerse );
+
+							// load a sound and set it as the Audio object's buffer
+							var audioLoaderse = new THREE.AudioLoader();
+							audioLoaderse.load( 'classic_hurt.mp3', function( bufferse ) {
+								soundse.setBuffer( bufferse );
+								soundse.setLoop( false );
+								soundse.setVolume( 0.5 );
+								soundse.play();
+							});
+
+
         					// checks for texture
         					if( flipped && mirrored && node.mat == 3) {
         							scene.remove(node);
@@ -638,6 +657,23 @@ function takeDamage() {
 		clearTimeout(flashTimeout);
 		flashTimeout = null;
 		//console.log("Took damage!!");
+		// sound effect boi
+        // create an AudioListener and add it to the camera
+		var listenertd = new THREE.AudioListener();
+		camera.add( listenertd );
+
+		// create a global audio source
+		var soundtd = new THREE.Audio( listenertd );
+
+		// load a sound and set it as the Audio object's buffer
+		var audioLoadertd = new THREE.AudioLoader();
+		audioLoadertd.load( 'robloxoof.mp3', function( buffertd ) {
+			soundtd.setBuffer( buffertd );
+			soundtd.setLoop( false );
+			soundtd.setVolume( 0.5 );
+			soundtd.play();
+		});
+
 		takeDamage();
 	} else {
 		scene.remove(redFlash);
